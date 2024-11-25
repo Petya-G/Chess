@@ -11,7 +11,7 @@ public abstract class Piece {
 	}
 
 	public enum Type {
-		PAWN, ROOK, KNIGTH, BISHOP, QUEEN, KING;
+		PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING;
 	}
 
 	public enum Direction {
@@ -58,7 +58,7 @@ public abstract class Piece {
 
 	public abstract List<Vec2> getMoves(Board board);
 
-	public List<Vec2> addMovesInDirection(Vec2 pos, Direction direction, Color color, Board board) {
+	public List<Vec2> addMovesInDirection(Direction direction, Board board) {
 		List<Vec2> moves = new ArrayList<>();
 		int x = pos.x;
 		int y = pos.y;
@@ -73,7 +73,7 @@ public abstract class Piece {
 				break;
 			}
 
-			if (board.hasPieceAt(move, color)) {
+			if (!board.hasPieceAt(move, color)) {
 				moves.add(move);
 			} else {
 				break;
@@ -84,26 +84,32 @@ public abstract class Piece {
 
 	public List<Vec2> getOrthogonalMoves(Board board) {
 		List<Vec2> moves = new ArrayList<>();
-
-//		for (int i = pos.x - 1; i >= 0; i--) {
-//			Vec2 move = new Vec2(i, pos.y);
-//			if (board.hasPieceAt(move, color))
-//				moves.add(move);
-//			else
-//				break;
-//		}
-//		for (int i = pos.x + 1; i < board.size; i++) {
-//			Vec2 move = new Vec2(i, pos.y);
-//			if (board.hasPieceAt(move, color))
-//				moves.add(move);
-//			else
-//				break;
-//		}
-//
-//		moves = board.clipMovesToBoard(moves);
+		moves.addAll(addMovesInDirection(Direction.LEFT, board));
+		moves.addAll(addMovesInDirection(Direction.RIGHT, board));
+		moves.addAll(addMovesInDirection(Direction.UP, board));
+		moves.addAll(addMovesInDirection(Direction.DOWN, board));
 		return moves;
-
 	}
 
+	public List<Vec2> getDiagonalMoves(Board board) {
+		List<Vec2> moves = new ArrayList<>();
+		moves = board.clipMovesToBoard(moves);
+		moves.addAll(addMovesInDirection(Direction.UP_LEFT, board));
+		moves.addAll(addMovesInDirection(Direction.UP_RIGHT, board));
+		moves.addAll(addMovesInDirection(Direction.DOWN_LEFT, board));
+		moves.addAll(addMovesInDirection(Direction.DOWN_RIGHT, board));
+		return moves;
+	}
+
+	public List<Vec2> limitMoves(List<Vec2> moves){
+		List<Vec2> lMoves = new ArrayList<>();
+		for(Vec2 v : moves) {
+			if(Math.abs(pos.x - v.x) <= 1 && Math.abs(pos.y - v.y) <= 1) {
+				lMoves.add(v);
+			}
+		}
+		return lMoves;
+	}
+	
 	public abstract Type getType();
 }

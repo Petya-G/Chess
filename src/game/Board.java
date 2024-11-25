@@ -25,6 +25,7 @@ public class Board {
 
 	public void setUpBoard() {
 		player1.setUpPieces(size, corner);
+		player2.setUpPieces(size, corner);
 	}
 
 	public List<Piece> getPieces() {
@@ -35,12 +36,12 @@ public class Board {
 	}
 
 	public boolean isWithinBounds(Vec2 move) {
-		return move.x < 0 || move.x > size || move.y < 0 || move.y > size;
+		return move.x >= 0 && move.x < size && move.y >= 0 && move.y < size;
 	}
 
 	public List<Vec2> clipMovesToBoard(List<Vec2> moves) {
 		for (Vec2 move : moves) {
-			if (isWithinBounds(move)) {
+			if (!isWithinBounds(move)) {
 				moves.remove(move);
 			}
 		}
@@ -49,6 +50,10 @@ public class Board {
 
 	public Color getTurn() {
 		return turn;
+	}
+
+	public Player getCurrentPlayer() {
+		return getTurn() == Color.WHITE ? player1 : player2;
 	}
 
 	public void changeTurn() {
@@ -74,11 +79,28 @@ public class Board {
 	}
 
 	public void MovePieceTo(Piece piece, Vec2 pos) {
+		boolean moved = false;
+		Piece attacked = getPieceAt(pos, piece.getOppositeColor());
 		if (piece.getMoves(this).contains(pos)) {
-			if (piece.getType() == Type.PAWN) {
+			piece.pos = pos;
+			moved = true;
+		} else if (piece.getType() == Type.PAWN) {
+			if (((Pawn) piece).getAttacks(this).contains(pos)) {
 				piece.pos = pos;
+				moved = true;
+			}
+		}
+
+		if (moved) {
+			if (attacked != null) {
+				if (piece.getOppositeColor() == Color.WHITE)
+					player1.removePiece(attacked);
+				else
+					player2.removePiece(attacked);
 			}
 			changeTurn();
+			if (getCurrentPlayer().isChecked(this))
+				System.out.println(player1.name + " checked");
 		}
 	}
 }

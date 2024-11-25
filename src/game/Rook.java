@@ -16,8 +16,7 @@ public class Rook extends Piece {
 
 	@Override
 	public List<Vec2> getMoves(Board board) {
-		// TODO Auto-generated method stub
-		return null;
+		return getOrthogonalMoves(board);
 	}
 
 	@Override

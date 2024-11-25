@@ -30,10 +30,11 @@ public class BoardController {
 	public void updateBoard() {
 		if (selectedPiece != null && selectedTilePos != null) {
 			board.MovePieceTo(selectedPiece, selectedTilePos);
+			selectedPiece = null;
+			selectedTilePos = null;
 		}
 		boardPanel.clearImages();
-		var p1Pieces = board.player1.getPieces();
-		for (Piece piece : p1Pieces) {
+		for (Piece piece : board.getPieces()) {
 			boardPanel.addImageTo(piece.getImage(), piece.getPos().x, piece.getPos().y);
 		}
 	}

@@ -41,11 +41,11 @@ public class Pawn extends Piece {
 		int sign = (color == Color.WHITE) ? 1 : -1;
 
 		Vec2 diagonalLeft = new Vec2(pos.x - 1, pos.y + 1 * sign);
-		if (!board.hasPieceAt(diagonalLeft, getOppositeColor()))
+		if (board.hasPieceAt(diagonalLeft, getOppositeColor()))
 			moves.add(diagonalLeft);
 
 		Vec2 diagonalRight = new Vec2(pos.x + 1, pos.y + 1 * sign);
-		if (!board.hasPieceAt(diagonalRight, getOppositeColor()))
+		if (board.hasPieceAt(diagonalRight, getOppositeColor()))
 			moves.add(diagonalRight);
 
 		moves = board.clipMovesToBoard(moves);
