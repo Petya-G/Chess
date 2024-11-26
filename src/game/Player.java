@@ -8,7 +8,7 @@ import game.Piece.Color;
 import game.Piece.Type;
 
 public class Player {
-	String name;
+	public String name;
 	Color color;
 	List<Piece> pieces;
 
@@ -28,12 +28,12 @@ public class Player {
 				pieces.add(new Pawn(color, new Vec2(i, 1)));
 			}
 			pieces.add(new Rook(color, new Vec2(0, 0)));
-			pieces.add(new Knight(color, new Vec2(1, 0)));
-			pieces.add(new Bishop(color, new Vec2(2, 0)));
-			pieces.add(new Queen(color, new Vec2(3, 0)));
+//			pieces.add(new Knight(color, new Vec2(1, 0)));
+//			pieces.add(new Bishop(color, new Vec2(2, 0)));
+//			pieces.add(new Queen(color, new Vec2(3, 0)));
 			pieces.add(new King(color, new Vec2(4, 0)));
-			pieces.add(new Bishop(color, new Vec2(5, 0)));
-			pieces.add(new Knight(color, new Vec2(6, 0)));
+//			pieces.add(new Bishop(color, new Vec2(5, 0)));
+//			pieces.add(new Knight(color, new Vec2(6, 0)));
 			pieces.add(new Rook(color, new Vec2(7, 0)));
 		} else {
 			for (int i = 0; i < size; i++) {
@@ -59,11 +59,19 @@ public class Player {
 		pieces.remove(piece);
 	}
 
+	public void addPiece(Piece piece) {
+		pieces.add(piece);
+	}
+
+	public King getKing() {
+		return  (King) pieces.stream().filter(p -> p.getType() == Type.KING).findFirst().orElse(null);
+	}
+	
 	public boolean isChecked(Board board) {
-		Piece king = pieces.stream().filter(p -> p.getType() == Type.KING).findFirst().orElse(null);
+		King king = getKing();
 		List<Vec2> moves = new ArrayList<>();
 
-		if (board.getTurn() == Color.WHITE) {
+		if (color == Color.WHITE) {
 			for (Piece p : board.player2.getPieces()) {
 				if (p.getType() == Type.PAWN)
 					moves.addAll(((Pawn) p).getAttacks(board));

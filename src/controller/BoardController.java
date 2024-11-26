@@ -4,20 +4,21 @@ import javax.swing.ImageIcon;
 
 import game.Board;
 import game.Piece;
+import game.Piece.Color;
 import game.Vec2;
 import ui.BoardPanel;
 import ui.Window;
 
 public class BoardController {
 	BoardPanel boardPanel;
-	Board board;
+	public Board board;
 	Window window;
 	static int boardSize = 8;
 	Piece selectedPiece;
 	Vec2 selectedTilePos;
 
-	public BoardController() {
-		this.boardPanel = new BoardPanel(this);
+	public BoardController(BoardPanel boardPanel) {
+		this.boardPanel = boardPanel;
 		this.window = new Window(boardPanel);
 		this.board = new Board("player1", "player2", boardSize, null);
 		board.setUpBoard();
@@ -29,7 +30,9 @@ public class BoardController {
 
 	public void updateBoard() {
 		if (selectedPiece != null && selectedTilePos != null) {
-			board.MovePieceTo(selectedPiece, selectedTilePos);
+			if(board.MovePieceTo(selectedPiece, selectedTilePos) != null) {
+				
+			}
 			selectedPiece = null;
 			selectedTilePos = null;
 		}
@@ -52,8 +55,5 @@ public class BoardController {
 		updateBoard();
 	}
 
-	public static void main(String[] args) {
-		BoardController bc = new BoardController();
-		bc.updateBoard();
-	}
+
 }

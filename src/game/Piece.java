@@ -30,10 +30,12 @@ public abstract class Piece {
 	Color color;
 	Vec2 pos;
 	ImageIcon image;
+	boolean firstMove;
 
 	public Piece(Color color, Vec2 pos) {
 		this.color = color;
 		this.pos = pos;
+		this.firstMove = true;
 	}
 
 	public Vec2 getPos() {
@@ -101,15 +103,15 @@ public abstract class Piece {
 		return moves;
 	}
 
-	public List<Vec2> limitMoves(List<Vec2> moves){
+	public List<Vec2> limitMoves(List<Vec2> moves) {
 		List<Vec2> lMoves = new ArrayList<>();
-		for(Vec2 v : moves) {
-			if(Math.abs(pos.x - v.x) <= 1 && Math.abs(pos.y - v.y) <= 1) {
+		for (Vec2 v : moves) {
+			if (Math.abs(pos.x - v.x) <= 1 && Math.abs(pos.y - v.y) <= 1) {
 				lMoves.add(v);
 			}
 		}
 		return lMoves;
 	}
-	
+
 	public abstract Type getType();
 }

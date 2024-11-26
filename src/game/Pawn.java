@@ -5,15 +5,12 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 public class Pawn extends Piece {
-	boolean firstMove;
-
 	public Pawn(Color color, Vec2 pos) {
 		super(color, pos);
 		if (color == Color.WHITE)
 			this.image = new ImageIcon("src/images/Chess_plt45.png");
 		else
 			this.image = new ImageIcon("src/images/Chess_pdt45.png");
-		firstMove = true;
 	}
 
 	@Override
