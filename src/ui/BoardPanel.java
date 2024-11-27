@@ -1,94 +1,90 @@
 package ui;
 
+import controller.BoardController;
+import game.Vec2;
 import java.awt.BorderLayout;
-
 import java.awt.Dimension;
 import java.awt.GridLayout;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import controller.BoardController;
-import game.Vec2;
-
 public class BoardPanel extends JPanel {
-	class Tile extends JButton {
-		public Tile(ImageIcon image) {
-			super(image);
-		}
+  class Tile extends JButton {
+    public Tile(ImageIcon image) { super(image); }
 
-		public void setTile(int i, int j) {
-			setBackground((i + j) % 2 == 0 ? Window.tileYellow : Window.tileGreen);
-			setOpaque(true);
-			setBorderPainted(false);
-			setPreferredSize(new Dimension(50, 50));
+    public void setTile(int i, int j) {
+      setBackground((i + j) % 2 == 0 ? Window.tileYellow : Window.tileGreen);
+      setOpaque(true);
+      setBorderPainted(false);
+      setPreferredSize(new Dimension(50, 50));
 
-			Vec2 pos = new Vec2(j, i);
+      Vec2 pos = new Vec2(j, i);
 
-			addActionListener(e -> {
-				System.out.println("Tile selected: " + pos.x + ", " + pos.y);
-				boardCtrl.updateSelected(pos);
-			});
-		}
-	}
+      addActionListener(e -> {
+        System.out.println("Tile selected: " + pos.x + ", " + pos.y);
+        boardCtrl.updateSelected(pos);
+      });
+    }
+  }
 
-	class PlayerNameLabel extends JLabel {
-		public PlayerNameLabel(String name) {
-			super(name, JLabel.LEFT);
-		}
-	}
+  class PlayerNameLabel extends JLabel {
+    public PlayerNameLabel(String name) { super(name, JLabel.LEFT); }
+  }
 
-	BoardController boardCtrl;
-	Tile[][] tiles;
-	int size;
-	PlayerNameLabel topLabel;
-	PlayerNameLabel bottomLabel;
-	JPanel gridPanel;
+  Window window;
+  BoardController boardCtrl;
+  Tile[][] tiles;
+  int size;
+  PlayerNameLabel topLabel;
+  PlayerNameLabel bottomLabel;
+  JPanel gridPanel;
 
-	public BoardPanel() {
-		setLayout(new BorderLayout());
-		boardCtrl = new BoardController(this);
-		this.size = boardCtrl.getSize();
+  public BoardPanel(Window window) {
+    this.window = window;
+    setLayout(new BorderLayout());
 
-		topLabel = new PlayerNameLabel(boardCtrl.board.player1.name);
-		add(topLabel, BorderLayout.NORTH);
+    String[] playerNames = window.playerNames;
+    String p1name = playerNames[0];
+    String p2name = playerNames[1];
 
-		gridPanel = new JPanel();
-		gridPanel.setLayout(new GridLayout(size, size));
-		tiles = new Tile[size][size];
+    boardCtrl = new BoardController(this, p1name, p2name);
+    this.size = boardCtrl.getSize();
 
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				Tile tile = new Tile(null);
-				tile.setTile(i, j);
+    topLabel = new PlayerNameLabel(boardCtrl.board.player1.name);
+    add(topLabel, BorderLayout.NORTH);
 
-				tiles[j][i] = tile;
-				gridPanel.add(tile);
-			}
-		}
+    bottomLabel = new PlayerNameLabel(boardCtrl.board.player2.name);
+    add(bottomLabel, BorderLayout.SOUTH);
 
-		add(gridPanel, BorderLayout.CENTER);
+    gridPanel = new JPanel();
+    gridPanel.setLayout(new GridLayout(size, size));
+    tiles = new Tile[size][size];
 
-		bottomLabel = new PlayerNameLabel(boardCtrl.board.player2.name);
-		add(bottomLabel, BorderLayout.SOUTH);
-	}
+    for (int i = 0; i < size; i++) {
+      for (int j = 0; j < size; j++) {
+        Tile tile = new Tile(null);
+        tile.setTile(i, j);
 
-	public void clearImages() {
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				tiles[j][i].setIcon(null);
-			}
-		}
-	}
+        tiles[j][i] = tile;
+        gridPanel.add(tile);
+      }
+    }
 
-	public void addImageTo(ImageIcon image, int x, int y) {
-		tiles[x][y].setIcon(image);
-	}
+    add(gridPanel, BorderLayout.CENTER);
+    revalidate();
+  }
 
-	public static void main(String[] args) {
-		BoardPanel panel = new BoardPanel();
-		panel.boardCtrl.updateBoard();
-	}
+  public void clearImages() {
+    for (int i = 0; i < size; i++) {
+      for (int j = 0; j < size; j++) {
+        tiles[j][i].setIcon(null);
+      }
+    }
+  }
+
+  public void addImageTo(ImageIcon image, int x, int y) {
+    tiles[x][y].setIcon(image);
+  }
 }

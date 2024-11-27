@@ -9,15 +9,13 @@ import ui.Window;
 public class BoardController {
 	BoardPanel boardPanel;
 	public Board board;
-	Window window;
 	static int boardSize = 8;
 	Piece selectedPiece;
 	Vec2 selectedTilePos;
 
-	public BoardController(BoardPanel boardPanel) {
+	public BoardController(BoardPanel boardPanel, String player1Name, String player2Name) {
 		this.boardPanel = boardPanel;
-		this.window = new Window(boardPanel);
-		this.board = new Board("player1", "player2", boardSize, null);
+		this.board = new Board(player1Name, player2Name, boardSize, null);
 		board.setUpBoard();
 	}
 

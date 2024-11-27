@@ -8,8 +8,8 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class LoadGame extends JPanel {
-	public LoadGame(Window window) {
+public class LoadPanel extends JPanel {
+	public LoadPanel(Window window) {
 		GridLayout gridLayout = new GridLayout(3, 3, 50, 50);
 		setLayout(gridLayout);
 
