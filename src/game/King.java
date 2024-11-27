@@ -28,10 +28,8 @@ public class King extends Piece {
 		}
 
 		Vec2 newPos = new Vec2(pos.x + 2, pos.y);
-		if(board.isMoveChecked(newPos))
-			return null;
-		
-		return newPos; 
+
+		return newPos;
 	}
 
 	public Vec2 queensideCastle(Board board) {
@@ -48,25 +46,23 @@ public class King extends Piece {
 		}
 
 		Vec2 newPos = new Vec2(pos.x + 2, pos.y);
-		if(board.isMoveChecked(newPos))
-			return null;
-		
-		return newPos; 
+
+		return newPos;
 	}
 
 	@Override
-	public List<Vec2> getMoves(Board board) {
+	public List<Vec2> getMoves(Board board, int turn) {
 		List<Vec2> moves = new ArrayList<>();
 		moves.addAll(getDiagonalMoves(board));
 		moves.addAll(getOrthogonalMoves(board));
 		moves = limitMoves(moves);
-//		Vec2 kingSide = kingsideCastle(board);
-//		if (kingSide != null)
-//			moves.add(kingSide);
-//
-//		Vec2 queenSide = queensideCastle(board);
-//		if (queenSide != null)
-//			moves.add(queenSide);
+
+		Vec2 qc = queensideCastle(board);
+		if (qc != null)
+			moves.add(qc);
+		Vec2 kc = queensideCastle(board);
+		if (kc != null)
+			moves.add(kc);
 
 		return moves;
 	}
@@ -74,5 +70,12 @@ public class King extends Piece {
 	@Override
 	public Type getType() {
 		return Type.KING;
+	}
+
+	@Override
+	public Piece clone(){
+		King k = new King(color, pos);
+		k.firstMove = this.firstMove;
+		return k;
 	}
 }

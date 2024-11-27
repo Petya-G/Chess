@@ -39,6 +39,7 @@ public class Player {
 			for (int i = 0; i < size; i++) {
 				pieces.add(new Pawn(color, new Vec2(i, 6)));
 			}
+				pieces.add(new Pawn(color, new Vec2(2, 3)));
 			pieces.add(new Rook(color, new Vec2(0, 7)));
 			pieces.add(new Knight(color, new Vec2(1, 7)));
 			pieces.add(new Bishop(color, new Vec2(2, 7)));
@@ -64,26 +65,20 @@ public class Player {
 	}
 
 	public King getKing() {
-		return  (King) pieces.stream().filter(p -> p.getType() == Type.KING).findFirst().orElse(null);
+		return (King) pieces.stream().filter(p -> p.getType() == Type.KING).findFirst().orElse(null);
 	}
-	
-	public boolean isChecked(Board board) {
+
+	public boolean isChecked(Board board, int turn) {
 		King king = getKing();
 		List<Vec2> moves = new ArrayList<>();
 
 		if (color == Color.WHITE) {
 			for (Piece p : board.player2.getPieces()) {
-				if (p.getType() == Type.PAWN)
-					moves.addAll(((Pawn) p).getAttacks(board));
-				else
-					moves.addAll(p.getMoves(board));
+				moves.addAll(p.getMoves(board, turn));
 			}
 		} else {
 			for (Piece p : board.player1.getPieces()) {
-				if (p.getType() == Type.PAWN)
-					moves.addAll(((Pawn) p).getAttacks(board));
-				else
-					moves.addAll(p.getMoves(board));
+				moves.addAll(p.getMoves(board, turn));
 			}
 		}
 

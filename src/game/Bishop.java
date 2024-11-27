@@ -15,12 +15,17 @@ public class Bishop extends Piece {
 	}
 
 	@Override
-	public List<Vec2> getMoves(Board board) {
+	public List<Vec2> getMoves(Board board, int turn) {
 		return getDiagonalMoves(board);
 	}
 
 	@Override
 	public Type getType() {
 		return Type.BISHOP;
+	}
+
+	@Override
+	public Piece clone(){
+		return new Bishop(color, pos);
 	}
 }

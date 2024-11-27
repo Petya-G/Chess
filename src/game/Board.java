@@ -101,15 +101,15 @@ public class Board {
 		King newKing = new King(getTurn(), pos);
 		getCurrentPlayer().addPiece(newKing);
 
-		boolean checked = getCurrentPlayer().isChecked(this);
+		boolean checked = getCurrentPlayer().isChecked(this, turn);
 		getCurrentPlayer().removePiece(newKing);
 		getCurrentPlayer().addPiece(oldKing);
 		return checked;
 	}
 
-	public List<Vec2> getMovesNotChecked(Vec2 pos) {
+	public List<Vec2> getMovesNotChecked(Vec2 pos, int turn) {
 		List<Vec2> movesNotChecked = new ArrayList<Vec2>();
-		for (Vec2 move : getCurrentPlayer().getKing().getMoves(this)) {
+		for (Vec2 move : getCurrentPlayer().getKing().getMoves(this, turn)) {
 			if (!isMoveChecked(move)) {
 				movesNotChecked.add(move);
 			}
@@ -118,13 +118,13 @@ public class Board {
 	}
 
 	public String MovePieceTo(Piece piece, Vec2 pos) {
-		if (getCurrentPlayer().isChecked(this)) {
+		if (getCurrentPlayer().isChecked(this, turn)) {
 			System.out.println(getCurrentPlayer().name + " checked");
 			if (piece.getType() != Type.KING) {
 				return null;
 			}
 
-			if (getMovesNotChecked(pos).size() == 0) {
+			if (getMovesNotChecked(pos, turn).size() == 0) {
 				changeTurn();
 				return getCurrentPlayer().name;
 			}
@@ -135,37 +135,50 @@ public class Board {
 
 		boolean moved = false;
 		Piece attacked = getPieceAt(pos, piece.getOppositeColor());
-		if (piece.getMoves(this).contains(pos)) {
-			piece.pos = pos;
-			moved = true;
-		}
 
 		if (piece.getType() == Type.PAWN) {
-			if (((Pawn) piece).getAttacks(this).contains(pos)) {
+			Pawn pawn = (Pawn) piece;
+			if (pos.equals(pawn.moveTwo(this))) {
+				pawn.pos = pos;
+				pawn.moved2 = turn;
+				moved = true;
+			} else if (pos.equals(pawn.enpassantLeft(this, turn))) {
+				attacked = getPieceAt(new Vec2(pawn.pos.x - 1, pawn.pos.y), pawn.getOppositeColor());
+				pawn.pos = pos;
+				moved = true;
+			} else if (pos.equals(pawn.enpassantRight(this, turn))) {
+				attacked = getPieceAt(new Vec2(pawn.pos.x + 1, pawn.pos.y), pawn.getOppositeColor());
+				pawn.pos = pos;
+				moved = true;
+			} else if (piece.getMoves(this, turn).contains(pos)) {
 				piece.pos = pos;
 				moved = true;
 			}
-
 		}
 
 		else if (piece.getType() == Type.KING) {
 			King king = (King) piece;
-			if(pos.equals(king.kingsideCastle(this))) {
+			if (pos.equals(king.kingsideCastle(this))) {
 				Rook rook = (Rook) getPieceAt(new Vec2(king.pos.x + 3, king.pos.y), king.color);
 				king.pos = new Vec2(king.pos.x + 2, king.pos.y);
 				rook.pos = new Vec2(rook.pos.x - 2, rook.pos.y);
 				rook.firstMove = false;
 				moved = true;
-			}
-			else if(pos.equals(king.queensideCastle(this))) {
-
+			} else if (pos.equals(king.queensideCastle(this))) {
 				Rook rook = (Rook) getPieceAt(new Vec2(king.pos.x - 4, king.pos.y), king.color);
 				king.pos = new Vec2(king.pos.x - 2, king.pos.y);
 				rook.pos = new Vec2(king.pos.x + 1, king.pos.y);
 				rook.firstMove = false;
 				moved = true;
+			} else if (piece.getMoves(this, turn).contains(pos)) {
+				piece.pos = pos;
+				moved = true;
 			}
+		}
 
+		else if (piece.getMoves(this, turn).contains(pos)) {
+			piece.pos = pos;
+			moved = true;
 		}
 
 		if (moved) {

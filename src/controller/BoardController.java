@@ -1,10 +1,7 @@
 package controller;
 
-import javax.swing.ImageIcon;
-
 import game.Board;
 import game.Piece;
-import game.Piece.Color;
 import game.Vec2;
 import ui.BoardPanel;
 import ui.Window;
