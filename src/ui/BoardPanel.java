@@ -24,29 +24,24 @@ public class BoardPanel extends JPanel {
 
       setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
       setBorderPainted(false);
-      setContentAreaFilled(false); // Prevents the default white background
-      setFocusPainted(false);      // Removes focus indicator
-      setOpaque(true);             // Ensures the background color is painted
+      setContentAreaFilled(false); 
+      setFocusPainted(false);      
+      setOpaque(true);             
 
-      // Create a panel to hold the row and column labels
       JPanel labelPanel = new JPanel(new BorderLayout());
       labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-      labelPanel.setOpaque(false); // Make the panel itself transparent
+      labelPanel.setOpaque(false); 
 
-      // Row label on top left (left side)
       rowLabel = new JLabel("", SwingConstants.LEFT);
       rowLabel.setOpaque(false);
       labelPanel.add(rowLabel, BorderLayout.NORTH);
 
-      // Column label on bottom right (right side)
       columnLabel = new JLabel("", SwingConstants.RIGHT);
       columnLabel.setOpaque(false);
       labelPanel.add(columnLabel, BorderLayout.SOUTH);
 
-      // Add the panel to the button
       add(labelPanel);
 
-      // Set the button to be opaque and set its background
       setOpaque(true);
     }
 
