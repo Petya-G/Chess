@@ -28,27 +28,27 @@ public class Player {
 				pieces.add(new Pawn(color, new Vec2(i, 1)));
 			}
 			pieces.add(new Rook(color, new Vec2(0, 0)));
-//			pieces.add(new Knight(color, new Vec2(1, 0)));
-//			pieces.add(new Bishop(color, new Vec2(2, 0)));
-//			pieces.add(new Queen(color, new Vec2(3, 0)));
-			pieces.add(new King(color, new Vec2(4, 0)));
-//			pieces.add(new Bishop(color, new Vec2(5, 0)));
-//			pieces.add(new Knight(color, new Vec2(6, 0)));
+			pieces.add(new Knight(color, new Vec2(1, 0)));
+			pieces.add(new Bishop(color, new Vec2(2, 0)));
+			pieces.add(new Queen(color, new Vec2(3, 0)));
+//			pieces.add(new King(color, new Vec2(4, 0)));
+			pieces.add(new Bishop(color, new Vec2(5, 0)));
+			pieces.add(new Knight(color, new Vec2(6, 0)));
 			pieces.add(new Rook(color, new Vec2(7, 0)));
+
+			pieces.add(new King(color, new Vec2(1, 5)));
 		} else {
-			for (int i = 0; i < size; i++) {
+			for (int i = 0; i < 1; i++) {
 				pieces.add(new Pawn(color, new Vec2(i, 6)));
 			}
-				pieces.add(new Pawn(color, new Vec2(2, 3)));
-			pieces.add(new Rook(color, new Vec2(0, 7)));
-			pieces.add(new Knight(color, new Vec2(1, 7)));
-			pieces.add(new Bishop(color, new Vec2(2, 7)));
-			pieces.add(new Queen(color, new Vec2(3, 7)));
-//			pieces.add(new King(color, new Vec2(4, 7)));
-			pieces.add(new King(color, new Vec2(1, 3)));
-			pieces.add(new Bishop(color, new Vec2(5, 7)));
-			pieces.add(new Knight(color, new Vec2(6, 7)));
-			pieces.add(new Rook(color, new Vec2(7, 7)));
+			// pieces.add(new Rook(color, new Vec2(0, 7)));
+			// pieces.add(new Knight(color, new Vec2(1, 7)));
+			// pieces.add(new Bishop(color, new Vec2(2, 7)));
+			// pieces.add(new Queen(color, new Vec2(3, 7)));
+			pieces.add(new King(color, new Vec2(4, 7)));
+			// pieces.add(new Bishop(color, new Vec2(5, 7)));
+			// pieces.add(new Knight(color, new Vec2(6, 7)));
+			// pieces.add(new Rook(color, new Vec2(7, 7)));
 		}
 	}
 
