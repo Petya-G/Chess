@@ -1,7 +1,5 @@
-package ui;
+package main.java.com.ui;
 
-import controller.BoardController;
-import game.Vec2;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,8 +9,11 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import main.java.com.controller.BoardController;
+import main.java.com.game.Vec2;
 
 public class BoardPanel extends JPanel {
 
@@ -84,17 +85,22 @@ public class BoardPanel extends JPanel {
         setForeground(Color.WHITE);
       }
     }
+
+    ControlButton saveButton, resignButton, drawButton, exitButton;
+
     public ControlPanel() {
+
       setLayout(new BorderLayout());
       JPanel buttonPanel = new JPanel(new FlowLayout());
 
-      ControlButton saveButton = new ControlButton("Save");
-      ControlButton resignButton = new ControlButton("Resign");
-      ControlButton drawButton = new ControlButton("Ask for draw");
-      ControlButton exitButton = new ControlButton("Exit");
+      saveButton = new ControlButton("Save");
+      resignButton = new ControlButton("Resign");
+      drawButton = new ControlButton("Ask for draw");
+      exitButton = new ControlButton("Exit");
 
       buttonPanel.add(saveButton);
       buttonPanel.add(resignButton);
+      resignButton.addActionListener(e -> { boardCtrl.resign(); });
       buttonPanel.add(drawButton);
       buttonPanel.add(exitButton);
       exitButton.addActionListener(e -> { window.showPanel("MainMenu"); });
@@ -145,7 +151,7 @@ public class BoardPanel extends JPanel {
 
     tiles[4][4].doClick();
 
-    controlPanel = new ControlPanel(); 
+    controlPanel = new ControlPanel();
     add(controlPanel, BorderLayout.EAST);
 
     add(gridPanel, BorderLayout.CENTER);
@@ -161,5 +167,18 @@ public class BoardPanel extends JPanel {
 
   public void addImageTo(ImageIcon image, int x, int y) {
     tiles[x][y].setIcon(image);
+  }
+
+  public void ShowResult(String result) {
+    JPanel panel = new JPanel();
+    panel.add(new JLabel(result));
+
+    int optionResult = JOptionPane.showConfirmDialog(
+        this, panel, "Show HighScores", JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE);
+
+    if (optionResult == JOptionPane.OK_OPTION) {
+      window.showPanel("HighScores");
+    }
   }
 }

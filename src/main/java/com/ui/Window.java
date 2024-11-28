@@ -1,4 +1,4 @@
-package ui;
+package main.java.com.ui;
 
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -11,6 +11,7 @@ public class Window extends JFrame {
   JPanel mainPanel;
   static MainMenu mainMenu;
   BoardPanel boardPanel;
+  HighScorePanel hsPanel;
 
   static Color tileYellow = new Color(0xEBECD0);
   static Color tileGreen = new Color(0x779556);
@@ -19,6 +20,7 @@ public class Window extends JFrame {
     this.setTitle("Chess");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setResizable(false);
+    this.setLocationRelativeTo(null);
     this.setSize(750, 500);
 
     ImageIcon image = new ImageIcon("src/images/Chess_nlt45.png");
@@ -27,8 +29,13 @@ public class Window extends JFrame {
 
     cardLayout = new CardLayout();
     mainPanel = new JPanel(cardLayout);
+
     mainMenu = new MainMenu(this);
     mainPanel.add(mainMenu, "MainMenu");
+
+    //    hsPanel = new HighScorePanel();
+    //   mainPanel.add(hsPanel, "HighScores");
+
     add(mainPanel);
     this.setVisible(true);
 
@@ -47,7 +54,5 @@ public class Window extends JFrame {
     }
   }
 
-  public static void main(String[] args) {
-    Window window = new Window();
-  }
+  public static void main(String[] args) { Window window = new Window(); }
 }

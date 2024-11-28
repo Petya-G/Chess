@@ -1,11 +1,11 @@
-package game;
+package main.java.com.game;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import game.Board.Corner;
-import game.Piece.Color;
-import game.Piece.Type;
+import main.java.com.game.Board.Corner;
+import main.java.com.game.Piece.Color;
+import main.java.com.game.Piece.Type;
 
 public class Player {
 	public String name;

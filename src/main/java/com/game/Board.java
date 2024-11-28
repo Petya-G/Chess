@@ -1,9 +1,10 @@
-package game;
+package main.java.com.game;
 
-import game.Piece.Color;
-import game.Piece.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import main.java.com.game.Piece.Color;
+import main.java.com.game.Piece.Type;
 
 public class Board {
   enum Corner {
@@ -18,7 +19,6 @@ public class Board {
   Corner corner;
   Color turnColor;
   int turn;
-  PGN pgn;
 
   public Board(String player1Name, String player2Name, int size,
                Corner corner) {
@@ -27,7 +27,6 @@ public class Board {
     this.size = size;
     this.turnColor = Color.WHITE;
     this.turn = 0;
-    this.pgn = new PGN();
   }
 
   public void setUpBoard() {
@@ -58,6 +57,10 @@ public class Board {
   public Color getTurn() { return turn % 2 == 0 ? Color.WHITE : Color.BLACK; }
 
   public Player getCurrentPlayer() { return getPlayer(getTurn()); }
+
+  public Player getNextPlayer() {
+    return getPlayer(turn + 1 % 2 == 0 ? Color.WHITE : Color.BLACK);
+  }
 
   public Player getPlayer(Color color) {
     return color == Color.WHITE ? player1 : player2;
@@ -143,7 +146,7 @@ public class Board {
               .getMovesNotChecked(pos, turn, this)
               .size() == 0) {
         changeTurn();
-        return getCurrentPlayer().name;
+        return getNextPlayer().name + " won";
       }
     }
 
@@ -158,15 +161,13 @@ public class Board {
           pawn.moved2 = turn;
           moved = true;
         }
-      }
-      else if (pos.equals(pawn.moveTwo(this))) {
+      } else if (pos.equals(pawn.moveTwo(this))) {
         if (!isMoveChecked(pawn, pos, null, null)) {
           pawn.pos = pos;
           pawn.moved2 = turn;
           moved = true;
         }
-      }
-      else if (pos.equals(pawn.enpassantLeft(this, turn))) {
+      } else if (pos.equals(pawn.enpassantLeft(this, turn))) {
         attacked = getPieceAt(new Vec2(pawn.pos.x - 1, pawn.pos.y),
                               pawn.getOppositeColor());
 
@@ -174,8 +175,7 @@ public class Board {
           pawn.pos = pos;
           moved = true;
         }
-      }
-      else if (pos.equals(pawn.enpassantRight(this, turn))) {
+      } else if (pos.equals(pawn.enpassantRight(this, turn))) {
         attacked = getPieceAt(new Vec2(pawn.pos.x + 1, pawn.pos.y),
                               pawn.getOppositeColor());
 
@@ -183,8 +183,7 @@ public class Board {
           pawn.pos = pos;
           moved = true;
         }
-      }
-      else if (piece.getMoves(this, turn).contains(pos)) {
+      } else if (piece.getMoves(this, turn).contains(pos)) {
 
         if (!isMoveChecked(pawn, pos, attacked, null)) {
           piece.pos = pos;
