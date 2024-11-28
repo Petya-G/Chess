@@ -50,7 +50,7 @@ public class BoardPanel extends JPanel {
     }
 
     public void setTile(int i, int j) {
-      setBackground((i + j) % 2 == 0 ? Window.tileYellow : Window.tileGreen);
+      setBackground((i + j) % 2 == 0 ? window.tileYellow : Window.tileGreen);
 
       if (j == 0) {
         rowLabel.setText(Integer.toString(i));

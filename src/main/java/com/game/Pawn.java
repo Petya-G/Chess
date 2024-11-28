@@ -12,9 +12,9 @@ public class Pawn extends Piece {
     super(color, pos);
     moved2 = -1;
     if (color == Color.WHITE)
-      this.image = new ImageIcon("src/images/Chess_plt45.png");
+      this.image = new ImageIcon("src/main/java/com/images/Chess_plt45.png");
     else
-      this.image = new ImageIcon("src/images/Chess_pdt45.png");
+      this.image = new ImageIcon("src/main/java/com/images/Chess_pdt45.png");
 
   }
 

@@ -21,7 +21,9 @@ public class BoardController {
   }
 
 
-  public int getSize() { return boardSize; }
+
+
+public int getSize() { return boardSize; }
 
   public void updateBoard() {
     if (selectedPiece != null && selectedTilePos != null) {

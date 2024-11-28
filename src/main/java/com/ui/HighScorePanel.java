@@ -2,33 +2,35 @@ package main.java.com.ui;
 
 import java.awt.BorderLayout;
 import java.util.Map;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import main.java.com.highscore.HighScoreManager;
 
 public class HighScorePanel extends JPanel {
-  private final HighScoreManager highScoreManager;
-  private final JTextArea highScoreTextArea;
+  private HighScoreManager highScoreManager;
 
-  public HighScorePanel(HighScoreManager highScoreManager) {
-    this.highScoreManager = highScoreManager;
-    this.highScoreTextArea = new JTextArea();
-    this.highScoreTextArea.setEditable(false);
-    this.setLayout(new BorderLayout());
-    this.add(new JScrollPane(highScoreTextArea), BorderLayout.CENTER);
-    displayHighScores();
+  public HighScorePanel(HighScoreManager manager) {
+    this.highScoreManager = manager;
+    setLayout(new BorderLayout());
+    updateDisplay();
   }
 
-  private void displayHighScores() {
-    StringBuilder builder = new StringBuilder();
-    Map<String, Integer> highScores = highScoreManager.getHighScores();
-    for (Map.Entry<String, Integer> entry : highScores.entrySet()) {
-      builder.append(entry.getKey())
+  public void updateDisplay() {
+    removeAll(); // Clear previous content
+    Map<String, Integer> scores = highScoreManager.getHighScores();
+    StringBuilder scoreText = new StringBuilder("<html><h1>High Scores</h1>");
+
+    for (Map.Entry<String, Integer> entry : scores.entrySet()) {
+      scoreText.append(entry.getKey())
           .append(": ")
           .append(entry.getValue())
-          .append("\n");
+          .append("<br>");
     }
-    highScoreTextArea.setText(builder.toString());
+
+    scoreText.append("</html>");
+    JLabel scoresLabel = new JLabel(scoreText.toString());
+    add(scoresLabel, BorderLayout.CENTER);
+    revalidate();
+    repaint();
   }
 }

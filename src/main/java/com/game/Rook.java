@@ -8,9 +8,9 @@ public class Rook extends Piece {
   public Rook(Color color, Vec2 pos) {
     super(color, pos);
     if (color == Color.WHITE)
-      this.image = new ImageIcon("src/images/Chess_rlt45.png");
+      this.image = new ImageIcon("src/main/java/comimages/Chess_rlt45.png");
     else
-      this.image = new ImageIcon("src/images/Chess_rdt45.png");
+      this.image = new ImageIcon("src/main/java/comimages/Chess_rdt45.png");
   }
 
   @Override

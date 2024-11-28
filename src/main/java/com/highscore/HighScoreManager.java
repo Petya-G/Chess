@@ -1,55 +1,75 @@
 package main.java.com.highscore;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.json.JsonWriter;
 
 public class HighScoreManager {
-  private final String filePath;
+  private static final String FILE_PATH =
+      "highscores.json"; // Path to the JSON file
   private Map<String, Integer> highScores;
-  private final ObjectMapper objectMapper;
 
-  public HighScoreManager(String filePath) {
-    this.filePath = filePath;
-    this.highScores = new HashMap<>();
-    this.objectMapper = new ObjectMapper();
+  public HighScoreManager() {
+    highScores = new HashMap<>();
     loadHighScores();
   }
 
   private void loadHighScores() {
-    File file = new File(filePath);
+    File file = new File(FILE_PATH);
     if (!file.exists()) {
-      // Create an empty high score JSON
-      saveHighScores();
-      return;
+      createNewFile();
     }
 
-    try {
-      String content = new String(Files.readAllBytes(Paths.get(filePath)));
-      highScores = objectMapper.readValue(content, Map.class);
+    try (JsonReader reader = Json.createReader(new FileInputStream(file))) {
+      JsonArray jsonArray = reader.readArray();
+      for (JsonObject jsonObject : jsonArray.getValuesAs(JsonObject.class)) {
+        String name = jsonObject.getString("name");
+        int score = jsonObject.getInt("highscore");
+        highScores.put(name, score);
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  public void incrementScore(String name) {
+  private void createNewFile() {
+    try {
+      Files.write(Paths.get(FILE_PATH),
+                  "[]".getBytes()); // Create an empty JSON array
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void incrementHighScore(String name) {
     highScores.put(name, highScores.getOrDefault(name, 0) + 1);
     saveHighScores();
   }
 
   private void saveHighScores() {
-    try {
-      String jsonString =
-          objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
-              highScores);
-      Files.write(Paths.get(filePath), jsonString.getBytes());
+    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+    for (Map.Entry<String, Integer> entry : highScores.entrySet()) {
+      JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+      objectBuilder.add("name", entry.getKey());
+      objectBuilder.add("highscore", entry.getValue());
+      arrayBuilder.add(objectBuilder.build());
+    }
+
+    try (JsonWriter writer =
+             Json.createWriter(new FileOutputStream(FILE_PATH))) {
+      writer.writeArray(arrayBuilder.build());
     } catch (IOException e) {
       e.printStackTrace();
     }

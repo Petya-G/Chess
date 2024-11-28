@@ -9,9 +9,9 @@ public class Knight extends Piece {
   public Knight(Color color, Vec2 pos) {
     super(color, pos);
     if (color == Color.WHITE)
-      this.image = new ImageIcon("src/images/Chess_nlt45.png");
+      this.image = new ImageIcon("src/main/java/com/images/Chess_nlt45.png");
     else
-      this.image = new ImageIcon("src/images/Chess_ndt45.png");
+      this.image = new ImageIcon("src/main/java/com/images/Chess_ndt45.png");
   }
 
   @Override

@@ -2,6 +2,7 @@ package main.java.com.ui;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,8 +14,8 @@ public class Window extends JFrame {
   BoardPanel boardPanel;
   HighScorePanel hsPanel;
 
-  static Color tileYellow = new Color(0xEBECD0);
-  static Color tileGreen = new Color(0x779556);
+  public static Color tileYellow = new Color(0xEBECD0);
+  public static Color tileGreen = new Color(0x779556);
 
   public Window() {
     this.setTitle("Chess");
@@ -23,7 +24,7 @@ public class Window extends JFrame {
     this.setLocationRelativeTo(null);
     this.setSize(750, 500);
 
-    ImageIcon image = new ImageIcon("src/images/Chess_nlt45.png");
+    ImageIcon image = new ImageIcon("src/main/java/com/images/Chess_nlt45.png");
     this.setIconImage(image.getImage());
     this.getContentPane().setBackground(new Color(0x302E2B));
 

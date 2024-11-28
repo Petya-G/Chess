@@ -9,9 +9,9 @@ public class King extends Piece {
   public King(Color color, Vec2 pos) {
     super(color, pos);
     if (color == Color.WHITE)
-      this.image = new ImageIcon("src/images/Chess_klt45.png");
+      this.image = new ImageIcon("src/main/java/com/images/Chess_klt45.png");
     else
-      this.image = new ImageIcon("src/images/Chess_kdt45.png");
+      this.image = new ImageIcon("src/main/java/com/images/Chess_kdt45.png");
   }
 
   public Vec2 kingsideCastle(Board board) {
@@ -76,14 +76,9 @@ public class King extends Piece {
     return (Rook)board.getPieceAt(new Vec2(pos.x - 4, pos.y), color);
   }
 
-  public Vec2 getKingsideRookPos() {
-    return new Vec2(pos.x - 1, pos.y);
-  }
+  public Vec2 getKingsideRookPos() { return new Vec2(pos.x - 1, pos.y); }
 
-  public Vec2 getQueensideRookPos() {
-    return new Vec2(pos.x + 1, pos.y);
-
-  }
+  public Vec2 getQueensideRookPos() { return new Vec2(pos.x + 1, pos.y); }
 
   public List<Vec2> getMovesNotChecked(Vec2 pos, int turn, Board board) {
     List<Vec2> movesNotChecked = new ArrayList<Vec2>();

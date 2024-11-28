@@ -9,9 +9,9 @@ public class Bishop extends Piece {
 	public Bishop(Color color, Vec2 pos) {
 		super(color, pos);
 		if (color == Color.WHITE)
-			this.image = new ImageIcon("src/images/Chess_blt45.png");
+			this.image = new ImageIcon("src/main/java/com/images/Chess_blt45.png");
 		else
-			this.image = new ImageIcon("src/images/Chess_bdt45.png");
+			this.image = new ImageIcon("src/main/java/com/images/Chess_bdt45.png");
 	}
 
 	@Override
