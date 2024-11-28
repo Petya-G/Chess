@@ -171,13 +171,16 @@ public class BoardPanel extends JPanel {
 
   public void ShowResult(String result) {
     JPanel panel = new JPanel();
-    panel.add(new JLabel(result));
+    String message = result != "Draw" ? result + " won." : result + ".";
+    panel.add(new JLabel(message));
 
     int optionResult = JOptionPane.showConfirmDialog(
         this, panel, "Show HighScores", JOptionPane.OK_CANCEL_OPTION,
         JOptionPane.PLAIN_MESSAGE);
 
     if (optionResult == JOptionPane.OK_OPTION) {
+      window.hsPanel.highScoreManager.incrementHighScore(result);
+      window.hsPanel.updateDisplay();
       window.showPanel("HighScores");
     }
   }

@@ -146,7 +146,7 @@ public class Board {
               .getMovesNotChecked(pos, turn, this)
               .size() == 0) {
         changeTurn();
-        return getNextPlayer().name + " won";
+        return getNextPlayer().name;
       }
     }
 

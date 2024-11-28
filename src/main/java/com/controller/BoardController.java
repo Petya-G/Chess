@@ -20,9 +20,6 @@ public class BoardController {
     board.setUpBoard();
   }
 
-
-
-
 public int getSize() { return boardSize; }
 
   public void updateBoard() {
@@ -57,6 +54,6 @@ public int getSize() { return boardSize; }
   }
 
   public void resign() {
-    boardPanel.ShowResult(board.getNextPlayer().name + " won.");
+    boardPanel.ShowResult(board.getNextPlayer().name);
   }
 }

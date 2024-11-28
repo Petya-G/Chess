@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 import main.java.com.highscore.HighScoreManager;
 
 public class HighScorePanel extends JPanel {
-  private HighScoreManager highScoreManager;
+  public HighScoreManager highScoreManager;
 
   public HighScorePanel() {
     this.highScoreManager = new HighScoreManager();
@@ -16,7 +16,7 @@ public class HighScorePanel extends JPanel {
   }
 
   public void updateDisplay() {
-    removeAll(); // Clear previous content
+    removeAll();
     Map<String, Integer> scores = highScoreManager.getHighScores();
     StringBuilder scoreText = new StringBuilder("<html><h1>High Scores</h1>");
 
