@@ -9,8 +9,8 @@ import main.java.com.highscore.HighScoreManager;
 public class HighScorePanel extends JPanel {
   private HighScoreManager highScoreManager;
 
-  public HighScorePanel(HighScoreManager manager) {
-    this.highScoreManager = manager;
+  public HighScorePanel() {
+    this.highScoreManager = new HighScoreManager();
     setLayout(new BorderLayout());
     updateDisplay();
   }

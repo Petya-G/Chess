@@ -34,8 +34,8 @@ public class Window extends JFrame {
     mainMenu = new MainMenu(this);
     mainPanel.add(mainMenu, "MainMenu");
 
-    //    hsPanel = new HighScorePanel();
-    //   mainPanel.add(hsPanel, "HighScores");
+    hsPanel = new HighScorePanel();
+    mainPanel.add(hsPanel, "HighScores");
 
     add(mainPanel);
     this.setVisible(true);
