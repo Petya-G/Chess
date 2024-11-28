@@ -3,7 +3,9 @@ package ui;
 import controller.BoardController;
 import game.Vec2;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -13,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class BoardPanel extends JPanel {
+
   class Tile extends JButton {
     private JLabel rowLabel;
     private JLabel columnLabel;
@@ -24,13 +27,13 @@ public class BoardPanel extends JPanel {
 
       setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
       setBorderPainted(false);
-      setContentAreaFilled(false); 
-      setFocusPainted(false);      
-      setOpaque(true);             
+      setContentAreaFilled(false);
+      setFocusPainted(false);
+      setOpaque(true);
 
       JPanel labelPanel = new JPanel(new BorderLayout());
       labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-      labelPanel.setOpaque(false); 
+      labelPanel.setOpaque(false);
 
       rowLabel = new JLabel("", SwingConstants.LEFT);
       rowLabel.setOpaque(false);
@@ -54,10 +57,10 @@ public class BoardPanel extends JPanel {
                                           : Window.tileGreen);
       }
 
-      if (i == 7) {
+      if (i == size - 1) {
         columnLabel.setText(Character.toString((char)('A' + j)));
         columnLabel.setForeground(j % 2 == 0 ? Window.tileYellow
-                                          : Window.tileGreen);
+                                             : Window.tileGreen);
       }
 
       Vec2 pos = new Vec2(j, i);
@@ -73,6 +76,33 @@ public class BoardPanel extends JPanel {
     public PlayerNameLabel(String name) { super(name, JLabel.LEFT); }
   }
 
+  class ControlPanel extends JPanel {
+    class ControlButton extends JButton {
+      public ControlButton(String text) {
+        super(text);
+        setBackground(new Color(0x383734));
+        setForeground(Color.WHITE);
+      }
+    }
+    public ControlPanel() {
+      setLayout(new BorderLayout());
+      JPanel buttonPanel = new JPanel(new FlowLayout());
+
+      ControlButton saveButton = new ControlButton("Save");
+      ControlButton resignButton = new ControlButton("Resign");
+      ControlButton drawButton = new ControlButton("Ask for draw");
+      ControlButton exitButton = new ControlButton("Exit");
+
+      buttonPanel.add(saveButton);
+      buttonPanel.add(resignButton);
+      buttonPanel.add(drawButton);
+      buttonPanel.add(exitButton);
+      exitButton.addActionListener(e -> { window.showPanel("MainMenu"); });
+
+      add(buttonPanel, BorderLayout.SOUTH);
+    }
+  }
+
   Window window;
   BoardController boardCtrl;
   Tile[][] tiles;
@@ -80,6 +110,7 @@ public class BoardPanel extends JPanel {
   PlayerNameLabel topLabel;
   PlayerNameLabel bottomLabel;
   JPanel gridPanel;
+  ControlPanel controlPanel;
 
   public BoardPanel(Window window) {
     this.window = window;
@@ -112,8 +143,12 @@ public class BoardPanel extends JPanel {
       }
     }
 
+    tiles[4][4].doClick();
+
+    controlPanel = new ControlPanel(); 
+    add(controlPanel, BorderLayout.EAST);
+
     add(gridPanel, BorderLayout.CENTER);
-    revalidate();
   }
 
   public void clearImages() {

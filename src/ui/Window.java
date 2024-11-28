@@ -19,7 +19,7 @@ public class Window extends JFrame {
     this.setTitle("Chess");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setResizable(false);
-    this.setSize(500, 500);
+    this.setSize(750, 500);
 
     ImageIcon image = new ImageIcon("src/images/Chess_nlt45.png");
     this.setIconImage(image.getImage());
