@@ -55,13 +55,13 @@ public class BoardPanel extends JPanel {
       if (j == 0) {
         rowLabel.setText(Integer.toString(i));
         rowLabel.setForeground(i % 2 == 1 ? Window.tileYellow
-                                          : Window.tileGreen);
+            : Window.tileGreen);
       }
 
       if (i == size - 1) {
-        columnLabel.setText(Character.toString((char)('A' + j)));
+        columnLabel.setText(Character.toString((char) ('A' + j)));
         columnLabel.setForeground(j % 2 == 0 ? Window.tileYellow
-                                             : Window.tileGreen);
+            : Window.tileGreen);
       }
 
       Vec2 pos = new Vec2(j, i);
@@ -74,7 +74,9 @@ public class BoardPanel extends JPanel {
   }
 
   class PlayerNameLabel extends JLabel {
-    public PlayerNameLabel(String name) { super(name, JLabel.LEFT); }
+    public PlayerNameLabel(String name) {
+      super(name, JLabel.LEFT);
+    }
   }
 
   class ControlPanel extends JPanel {
@@ -100,12 +102,14 @@ public class BoardPanel extends JPanel {
 
       buttonPanel.add(saveButton);
       buttonPanel.add(resignButton);
-      resignButton.addActionListener(e -> { boardCtrl.resign(); });
+      resignButton.addActionListener(e -> {
+        boardCtrl.resign();
+      });
       buttonPanel.add(drawButton);
       drawButton.addActionListener(e -> {
         JPanel panel = new JPanel();
-        panel.add(new JLabel(boardCtrl.board.getCurrentPlayer().name +
-                             " is asking for draw."));
+        panel.add(new JLabel(boardCtrl.board.getPlayer().name +
+            " is asking for draw."));
 
         int optionResult = JOptionPane.showConfirmDialog(
             this, panel, "Draw request", JOptionPane.OK_CANCEL_OPTION,
@@ -116,7 +120,9 @@ public class BoardPanel extends JPanel {
         }
       });
       buttonPanel.add(exitButton);
-      exitButton.addActionListener(e -> { window.showPanel("MainMenu"); });
+      exitButton.addActionListener(e -> {
+        window.showPanel("MainMenu");
+      });
 
       add(buttonPanel, BorderLayout.SOUTH);
     }
@@ -187,14 +193,15 @@ public class BoardPanel extends JPanel {
     String message = "Draw".equals(result) ? result + "." : result + " won.";
     panel.add(new JLabel(message));
 
-    JOptionPane.showMessageDialog(this, panel, "Game Result", JOptionPane.PLAIN_MESSAGE);
+    JOptionPane.showMessageDialog(this, panel, "Game Result",
+        JOptionPane.PLAIN_MESSAGE);
     if ("Draw".equals(result)) {
-        window.hsPanel.highScoreManager.incrementHighScore(
-            boardCtrl.board.player1.name, 0.5f);
-        window.hsPanel.highScoreManager.incrementHighScore(
-            boardCtrl.board.player2.name, 0.5f);
+      window.hsPanel.highScoreManager.incrementHighScore(
+          boardCtrl.board.player1.name, 0.5f);
+      window.hsPanel.highScoreManager.incrementHighScore(
+          boardCtrl.board.player2.name, 0.5f);
     } else {
-        window.hsPanel.highScoreManager.incrementHighScore(result, 1);
+      window.hsPanel.highScoreManager.incrementHighScore(result, 1);
     }
 
     window.hsPanel.updateDisplay();

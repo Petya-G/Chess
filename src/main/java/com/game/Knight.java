@@ -15,7 +15,7 @@ public class Knight extends Piece {
   }
 
   @Override
-  public List<Vec2> getMoves(Board board, int turn) {
+  public List<Vec2> getMoves(Board board) {
     List<Vec2> moves = new ArrayList<>();
 
     int[][] moveOffsets = {{2, 1}, {2, -1}, {-2, 1}, {-2, -1},

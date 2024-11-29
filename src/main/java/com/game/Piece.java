@@ -2,9 +2,55 @@ package main.java.com.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javax.swing.ImageIcon;
 
 public abstract class Piece {
+  Color color;
+  Vec2 pos;
+  ImageIcon image;
+  boolean firstMove;
+
+  public Piece(Color color, Vec2 pos) {
+    this.color = color;
+    this.pos = pos;
+    this.firstMove = true;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null || getClass() != obj.getClass())
+      return false;
+
+    Piece piece = (Piece) obj;
+    return this.color == piece.color && this.pos.equals(piece.pos);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(color, pos);
+  }
+
+  public abstract List<Vec2> getMoves(Board board);
+
+  public boolean move(Vec2 newPos, Board board) {
+    Piece attacked = board.getPieceAt(newPos, getOppositeColor());
+    if (getMoves(board).contains(newPos) &&
+        !board.getPlayer().isMoveChecked(board, this, newPos, attacked,
+            null)) {
+      this.pos = newPos;
+      return true;
+    }
+    return false;
+  }
+
+  public abstract Type getType();
+
+  public abstract Piece clone();
+
   public enum Color {
     WHITE,
     BLACK;
@@ -38,30 +84,25 @@ public abstract class Piece {
     }
   }
 
-  Color color;
-  Vec2 pos;
-  ImageIcon image;
-  boolean firstMove;
-
-  public Piece(Color color, Vec2 pos) {
-    this.color = color;
-    this.pos = pos;
-    this.firstMove = true;
+  public Vec2 getPos() {
+    return pos;
   }
 
-  public Vec2 getPos() { return pos; }
+  void setPos(Vec2 pos) {
+    this.pos = pos;
+  }
 
-  void setPos(Vec2 pos) { this.pos = pos; }
+  public ImageIcon getImage() {
+    return image;
+  }
 
-  public ImageIcon getImage() { return image; }
-
-  public Color getColor() { return color; }
+  public Color getColor() {
+    return color;
+  }
 
   public Color getOppositeColor() {
     return (color == Color.WHITE) ? Color.BLACK : Color.WHITE;
   }
-
-  public abstract List<Vec2> getMoves(Board board, int turn);
 
   public List<Vec2> addMovesInDirection(Direction direction, Board board) {
     List<Vec2> moves = new ArrayList<>();
@@ -78,6 +119,10 @@ public abstract class Piece {
         break;
       }
 
+      if (move.equals(new Vec2(0, 6))) {
+        int fasz = 0;
+        ;
+      }
       if (!board.hasPieceAt(move, color)) {
         moves.add(move);
       } else {
@@ -115,8 +160,4 @@ public abstract class Piece {
     }
     return lMoves;
   }
-
-  public abstract Type getType();
-
-  public abstract Piece clone();
 }

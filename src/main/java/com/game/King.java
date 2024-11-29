@@ -14,6 +14,35 @@ public class King extends Piece {
       this.image = new ImageIcon("src/main/java/com/images/Chess_kdt45.png");
   }
 
+  @Override
+  public boolean move(Vec2 newPos, Board board) {
+    if (pos.equals(kingsideCastle(board))) {
+      Rook rook = getKingsideRook(board);
+      if (!board.getPlayer().isMoveChecked(board, this, pos, rook,
+          getKingsideRookPos()) &&
+          rook.firstMove && this.firstMove) {
+        if (super.move(newPos, board) &&
+            rook.move(getKingsideRookPos(), board)) {
+          return true;
+        }
+      }
+    }
+
+    else if (pos.equals(queensideCastle(board))) {
+      Rook rook = getQueensideRook(board);
+      if (!board.getPlayer().isMoveChecked(board, this, pos, rook,
+          getQueensideRookPos()) &&
+          rook.firstMove && this.firstMove) {
+        if (super.move(newPos, board) &&
+            rook.move(getQueensideRookPos(), board)) {
+          return true;
+        }
+      }
+    }
+
+    return super.move(newPos, board);
+  }
+
   public Vec2 kingsideCastle(Board board) {
     Piece rook = board.getPieceAt(new Vec2(pos.x + 3, pos.y), color);
     if (rook == null || rook.getType() != Type.ROOK)
@@ -52,7 +81,7 @@ public class King extends Piece {
   }
 
   @Override
-  public List<Vec2> getMoves(Board board, int turn) {
+  public List<Vec2> getMoves(Board board) {
     List<Vec2> moves = new ArrayList<>();
     moves.addAll(getDiagonalMoves(board));
     moves.addAll(getOrthogonalMoves(board));
@@ -69,20 +98,24 @@ public class King extends Piece {
   }
 
   public Rook getKingsideRook(Board board) {
-    return (Rook)board.getPieceAt(new Vec2(pos.x + 3, pos.y), color);
+    return (Rook) board.getPieceAt(new Vec2(pos.x + 3, pos.y), color);
   }
 
   public Rook getQueensideRook(Board board) {
-    return (Rook)board.getPieceAt(new Vec2(pos.x - 4, pos.y), color);
+    return (Rook) board.getPieceAt(new Vec2(pos.x - 4, pos.y), color);
   }
 
-  public Vec2 getKingsideRookPos() { return new Vec2(pos.x - 1, pos.y); }
+  public Vec2 getKingsideRookPos() {
+    return new Vec2(pos.x - 1, pos.y);
+  }
 
-  public Vec2 getQueensideRookPos() { return new Vec2(pos.x + 1, pos.y); }
+  public Vec2 getQueensideRookPos() {
+    return new Vec2(pos.x + 1, pos.y);
+  }
 
   public List<Vec2> getMovesNotChecked(Vec2 pos, int turn, Board board) {
     List<Vec2> movesNotChecked = new ArrayList<Vec2>();
-    for (Vec2 move : getMoves(board, turn)) {
+    for (Vec2 move : getMoves(board)) {
       Piece secondary = null;
       Vec2 sPos = null;
 
@@ -96,7 +129,8 @@ public class King extends Piece {
         sPos = getQueensideRookPos();
       }
 
-      if (!board.isMoveChecked(this, move, secondary, sPos)) {
+      if (!board.getPlayer().isMoveChecked(board, this, move, secondary,
+          sPos)) {
         movesNotChecked.add(move);
       }
     }

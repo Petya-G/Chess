@@ -20,7 +20,7 @@ public class Board {
   int turn;
 
   public Board(String player1Name, String player2Name, int size,
-               Corner corner) {
+      Corner corner) {
     this.player1 = new Player(player1Name, Color.WHITE);
     this.player2 = new Player(player2Name, Color.BLACK);
     this.size = size;
@@ -53,9 +53,13 @@ public class Board {
     return moves;
   }
 
-  public Color getTurn() { return turn % 2 == 0 ? Color.WHITE : Color.BLACK; }
+  public Color getTurn() {
+    return turn % 2 == 0 ? Color.WHITE : Color.BLACK;
+  }
 
-  public Player getCurrentPlayer() { return getPlayer(getTurn()); }
+  public Player getPlayer() {
+    return getPlayer(getTurn());
+  }
 
   public Player getNextPlayer() {
     return getPlayer(turn + 1 % 2 == 0 ? Color.WHITE : Color.BLACK);
@@ -65,7 +69,9 @@ public class Board {
     return color == Color.WHITE ? player1 : player2;
   }
 
-  public void changeTurn() { turn++; }
+  public void changeTurn() {
+    turn++;
+  }
 
   public boolean hasPieceAt(Vec2 pos, Color color) {
     for (Piece p : getPieces()) {
@@ -94,6 +100,13 @@ public class Board {
     return null;
   }
 
+  public void removePiece(Piece p) {
+    if (p.getColor() == Color.WHITE)
+      player1.removePiece(p);
+    else
+      player2.removePiece(p);
+  }
+
   public boolean isOnSameColoredTile(Piece p1, Piece p2) {
     return (p1.pos.x + p1.pos.y % 2) == (p2.pos.x + p2.pos.y % 2);
   }
@@ -118,21 +131,16 @@ public class Board {
     if (player1.countType(null) == 2 && player1.countType(Type.BISHOP) == 1 &&
         player2.countType(null) == 2 && player2.countType(Type.BISHOP) == 1 &&
         isOnSameColoredTile(player1.getPiece(Type.BISHOP),
-                            player2.getPiece(Type.BISHOP)))
+            player2.getPiece(Type.BISHOP)))
       return true;
     return false;
   }
 
   public String MovePieceTo(Piece piece, Vec2 pos) {
-    if (getCurrentPlayer().isChecked(this, turn)) {
-      System.out.println(getCurrentPlayer().name + " checked");
-      if (piece.getType() != Type.KING) {
-        return null;
-      }
-
-      if (((King)getCurrentPlayer().getPiece(Type.KING))
-              .getMovesNotChecked(pos, turn, this)
-              .size() == 0) {
+    if (getPlayer().isChecked(this, turn)) {
+      if (((King) getPlayer().getPiece(Type.KING))
+          .getMovesNotChecked(pos, turn, this)
+          .size() == 0) {
         changeTurn();
         return getNextPlayer().name;
       }
@@ -142,95 +150,15 @@ public class Board {
       return "Draw";
     }
 
-    boolean moved = false;
     Piece attacked = getPieceAt(pos, piece.getOppositeColor());
 
-    if (piece.getType() == Type.PAWN) {
-      Pawn pawn = (Pawn)piece;
-      if (pos.equals(pawn.moveOne(this))) {
-        if (!getCurrentPlayer().isMoveChecked(this, pawn, pos, null, null)) {
-          pawn.pos = pos;
-          pawn.moved2 = turn;
-          moved = true;
-        }
-      } else if (pos.equals(pawn.moveTwo(this))) {
-        if (!getCurrentPlayer().isMoveChecked(this, pawn, pos, null, null)) {
-          pawn.pos = pos;
-          pawn.moved2 = turn;
-          moved = true;
-        }
-      } else if (pos.equals(pawn.enpassantLeft(this, turn))) {
-        attacked = getPieceAt(new Vec2(pawn.pos.x - 1, pawn.pos.y),
-                              pawn.getOppositeColor());
-
-        if (!getCurrentPlayer().isMoveChecked(this, pawn, pos, attacked,
-                                              null)) {
-          pawn.pos = pos;
-          moved = true;
-        }
-      } else if (pos.equals(pawn.enpassantRight(this, turn))) {
-        attacked = getPieceAt(new Vec2(pawn.pos.x + 1, pawn.pos.y),
-                              pawn.getOppositeColor());
-
-        if (!getCurrentPlayer().isMoveChecked(this, pawn, pos, attacked,
-                                              null)) {
-          pawn.pos = pos;
-          moved = true;
-        }
-      } else if (piece.getMoves(this, turn).contains(pos)) {
-
-        if (!getCurrentPlayer().isMoveChecked(this, pawn, pos, attacked,
-                                              null)) {
-          piece.pos = pos;
-          moved = true;
-        }
-      }
-    }
-
-    else if (piece.getType() == Type.KING) {
-      King king = (King)piece;
-      if (pos.equals(king.kingsideCastle(this))) {
-        Rook rook = king.getKingsideRook(this);
-        king.pos = pos;
-        rook.pos = king.getKingsideRookPos();
-
-        if (!getCurrentPlayer().isMoveChecked(this, king, pos, rook,
-                                              rook.pos)) {
-          rook.firstMove = false;
-          moved = true;
-        }
-      } else if (pos.equals(king.queensideCastle(this))) {
-        Rook rook = king.getQueensideRook(this);
-        king.pos = pos;
-        rook.pos = king.getQueensideRookPos();
-        if (!getCurrentPlayer().isMoveChecked(this, king, pos, rook,
-                                              rook.pos)) {
-          rook.firstMove = false;
-          moved = true;
-        }
-      } else if (piece.getMoves(this, turn).contains(pos)) {
-        if (!getCurrentPlayer().isMoveChecked(this, king, pos, null, null)) {
-          piece.pos = pos;
-          moved = true;
-        }
-      }
-    }
-
-    else if (piece.getMoves(this, turn).contains(pos)) {
-      if (!getCurrentPlayer().isMoveChecked(this, piece, pos, null, null)) {
-        piece.pos = pos;
-        moved = true;
-      }
-    }
-
-    if (moved) {
+    if (piece.move(pos, this)) {
       if (attacked != null) {
         if (piece.getOppositeColor() == Color.WHITE)
           player1.removePiece(attacked);
         else
           player2.removePiece(attacked);
       }
-      piece.firstMove = false;
       changeTurn();
     }
     return null;

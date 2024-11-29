@@ -15,7 +15,7 @@ public class Queen extends Piece {
   }
 
   @Override
-  public List<Vec2> getMoves(Board board, int turn) {
+  public List<Vec2> getMoves(Board board) {
     List<Vec2> moves = new ArrayList<>();
     moves.addAll(getDiagonalMoves(board));
     moves.addAll(getOrthogonalMoves(board));

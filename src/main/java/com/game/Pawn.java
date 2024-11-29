@@ -15,7 +15,50 @@ public class Pawn extends Piece {
       this.image = new ImageIcon("src/main/java/com/images/Chess_plt45.png");
     else
       this.image = new ImageIcon("src/main/java/com/images/Chess_pdt45.png");
+  }
 
+  @Override
+  public Type getType() {
+    return Type.PAWN;
+  }
+
+  @Override
+  public Pawn clone() {
+    Pawn p = new Pawn(color, pos);
+    p.firstMove = firstMove;
+    p.moved2 = moved2;
+    return p;
+  }
+
+  @Override
+  public boolean move(Vec2 newPos, Board board) {
+    Piece attacked;
+    if (pos.equals(enpassantLeft(board))) {
+      attacked = board.getPieceAt(new Vec2(pos.x - 1, pos.y), getOppositeColor());
+      if (!board.getPlayer().isMoveChecked(board, this, newPos, attacked,
+          null)) {
+        if (super.move(newPos, board))
+          board.removePiece(attacked);
+      }
+    }
+
+    else if (pos.equals(enpassantRight(board))) {
+      attacked = board.getPieceAt(new Vec2(pos.x + 1, pos.y), getOppositeColor());
+      if (!board.getPlayer().isMoveChecked(board, this, newPos, attacked,
+          null)) {
+        if (super.move(newPos, board))
+          board.removePiece(attacked);
+      }
+    }
+
+    else if (super.move(newPos, board)) {
+      if (pos.equals(this.moveTwo(board))) {
+        moved2 = board.turn;
+      }
+      return true;
+    }
+
+    return false;
   }
 
   public Vec2 moveTwo(Board board) {
@@ -36,14 +79,14 @@ public class Pawn extends Piece {
   }
 
   @Override
-  public List<Vec2> getMoves(Board board, int turn) {
+  public List<Vec2> getMoves(Board board) {
     List<Vec2> moves = new ArrayList<>();
 
-    Vec2 passl = enpassantLeft(board, turn);
+    Vec2 passl = enpassantLeft(board);
     if (passl != null)
       moves.add(passl);
 
-    Vec2 passr = enpassantRight(board, turn);
+    Vec2 passr = enpassantRight(board);
     if (passr != null)
       moves.add(passr);
 
@@ -57,50 +100,42 @@ public class Pawn extends Piece {
     if (board.hasPieceAt(diagonalRight, getOppositeColor()))
       moves.add(diagonalRight);
 
+    if (moveOne(board) != null)
+      moves.add(moveOne(board));
+    if (moveTwo(board) != null)
+      moves.add(moveTwo(board));
+
     moves = board.clipMovesToBoard(moves);
     return moves;
   }
 
-  public Vec2 enpassantRight(Board board, int turn) {
+  public Vec2 enpassantRight(Board board) {
     sign = (color == Color.WHITE) ? 1 : -1;
     Vec2 diagonalRight = new Vec2(pos.x + 1, pos.y + 1 * sign);
     Piece p = board.getPieceAt(new Vec2(pos.x + 1, pos.y), getOppositeColor());
     if (p != null) {
       if (p.getType() != Type.PAWN)
         return null;
-      Pawn pawn = (Pawn)p;
-      if (pawn.getType() == Type.PAWN && pawn.moved2 == turn - 1) {
+      Pawn pawn = (Pawn) p;
+      if (pawn.getType() == Type.PAWN && pawn.moved2 == board.turn - 1) {
         return diagonalRight;
       }
     }
     return null;
   }
 
-  public Vec2 enpassantLeft(Board board, int turn) {
+  public Vec2 enpassantLeft(Board board) {
     sign = (color == Color.WHITE) ? 1 : -1;
     Vec2 diagonalLeft = new Vec2(pos.x - 1, pos.y + 1 * sign);
     Piece p = board.getPieceAt(new Vec2(pos.x - 1, pos.y), getOppositeColor());
     if (p != null) {
       if (p.getType() != Type.PAWN)
         return null;
-      Pawn pawn = (Pawn)p;
-      if (pawn.getType() == Type.PAWN && pawn.moved2 == turn - 1) {
+      Pawn pawn = (Pawn) p;
+      if (pawn.getType() == Type.PAWN && pawn.moved2 == board.turn - 1) {
         return diagonalLeft;
       }
     }
     return null;
-  }
-
-  @Override
-  public Type getType() {
-    return Type.PAWN;
-  }
-
-  @Override
-  public Pawn clone() {
-    Pawn p = new Pawn(color, pos);
-    p.firstMove = firstMove;
-    p.moved2 = moved2;
-    return p;
   }
 }

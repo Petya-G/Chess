@@ -15,7 +15,7 @@ public class Bishop extends Piece {
 	}
 
 	@Override
-	public List<Vec2> getMoves(Board board, int turn) {
+	public List<Vec2> getMoves(Board board) {
 		return getDiagonalMoves(board);
 	}
 
