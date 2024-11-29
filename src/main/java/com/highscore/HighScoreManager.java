@@ -17,8 +17,7 @@ import javax.json.JsonReader;
 import javax.json.JsonWriter;
 
 public class HighScoreManager {
-  private static final String FILE_PATH =
-      "highscores.json"; // Path to the JSON file
+  private static final String FILE_PATH = "highscores.json";
   private Map<String, Float> highScores;
 
   public HighScoreManager() {

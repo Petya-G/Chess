@@ -94,45 +94,6 @@ public class Board {
     return null;
   }
 
-  public boolean isMoveChecked(Piece primary, Vec2 pPos, Piece secondary,
-                               Vec2 sPos) {
-    Piece oPrimary = primary;
-    getCurrentPlayer().removePiece(primary);
-
-    Piece nPrimary = primary.clone();
-    nPrimary.pos = pPos;
-    getCurrentPlayer().addPiece(nPrimary);
-
-    boolean checked;
-    if (secondary == null && sPos == null) {
-      checked = getCurrentPlayer().isChecked(this, turn);
-    }
-
-    else {
-      Piece oSecondary = secondary.clone();
-      getCurrentPlayer().removePiece(oSecondary);
-
-      if (sPos == null) {
-        checked = getCurrentPlayer().isChecked(this, turn);
-      }
-
-      else {
-        Piece nSecondary = secondary.clone();
-        nSecondary.pos = sPos;
-        getCurrentPlayer().addPiece(nSecondary);
-
-        checked = getCurrentPlayer().isChecked(this, turn);
-        getCurrentPlayer().removePiece(nSecondary);
-      }
-      getCurrentPlayer().addPiece(oSecondary);
-    }
-
-    getCurrentPlayer().removePiece(nPrimary);
-    getCurrentPlayer().addPiece(oPrimary);
-
-    return checked;
-  }
-
   public boolean isOnSameColoredTile(Piece p1, Piece p2) {
     return (p1.pos.x + p1.pos.y % 2) == (p2.pos.x + p2.pos.y % 2);
   }
@@ -177,7 +138,7 @@ public class Board {
       }
     }
 
-    if(isDraw()){
+    if (isDraw()) {
       return "Draw";
     }
 
@@ -187,13 +148,13 @@ public class Board {
     if (piece.getType() == Type.PAWN) {
       Pawn pawn = (Pawn)piece;
       if (pos.equals(pawn.moveOne(this))) {
-        if (!isMoveChecked(pawn, pos, null, null)) {
+        if (!getCurrentPlayer().isMoveChecked(this, pawn, pos, null, null)) {
           pawn.pos = pos;
           pawn.moved2 = turn;
           moved = true;
         }
       } else if (pos.equals(pawn.moveTwo(this))) {
-        if (!isMoveChecked(pawn, pos, null, null)) {
+        if (!getCurrentPlayer().isMoveChecked(this, pawn, pos, null, null)) {
           pawn.pos = pos;
           pawn.moved2 = turn;
           moved = true;
@@ -202,7 +163,8 @@ public class Board {
         attacked = getPieceAt(new Vec2(pawn.pos.x - 1, pawn.pos.y),
                               pawn.getOppositeColor());
 
-        if (!isMoveChecked(pawn, pos, attacked, null)) {
+        if (!getCurrentPlayer().isMoveChecked(this, pawn, pos, attacked,
+                                              null)) {
           pawn.pos = pos;
           moved = true;
         }
@@ -210,13 +172,15 @@ public class Board {
         attacked = getPieceAt(new Vec2(pawn.pos.x + 1, pawn.pos.y),
                               pawn.getOppositeColor());
 
-        if (!isMoveChecked(pawn, pos, attacked, null)) {
+        if (!getCurrentPlayer().isMoveChecked(this, pawn, pos, attacked,
+                                              null)) {
           pawn.pos = pos;
           moved = true;
         }
       } else if (piece.getMoves(this, turn).contains(pos)) {
 
-        if (!isMoveChecked(pawn, pos, attacked, null)) {
+        if (!getCurrentPlayer().isMoveChecked(this, pawn, pos, attacked,
+                                              null)) {
           piece.pos = pos;
           moved = true;
         }
@@ -230,7 +194,8 @@ public class Board {
         king.pos = pos;
         rook.pos = king.getKingsideRookPos();
 
-        if (!isMoveChecked(king, pos, rook, rook.pos)) {
+        if (!getCurrentPlayer().isMoveChecked(this, king, pos, rook,
+                                              rook.pos)) {
           rook.firstMove = false;
           moved = true;
         }
@@ -238,12 +203,13 @@ public class Board {
         Rook rook = king.getQueensideRook(this);
         king.pos = pos;
         rook.pos = king.getQueensideRookPos();
-        if (!isMoveChecked(king, pos, rook, rook.pos)) {
+        if (!getCurrentPlayer().isMoveChecked(this, king, pos, rook,
+                                              rook.pos)) {
           rook.firstMove = false;
           moved = true;
         }
       } else if (piece.getMoves(this, turn).contains(pos)) {
-        if (!isMoveChecked(king, pos, null, null)) {
+        if (!getCurrentPlayer().isMoveChecked(this, king, pos, null, null)) {
           piece.pos = pos;
           moved = true;
         }
@@ -251,7 +217,7 @@ public class Board {
     }
 
     else if (piece.getMoves(this, turn).contains(pos)) {
-      if (!isMoveChecked(piece, pos, null, null)) {
+      if (!getCurrentPlayer().isMoveChecked(this, piece, pos, null, null)) {
         piece.pos = pos;
         moved = true;
       }

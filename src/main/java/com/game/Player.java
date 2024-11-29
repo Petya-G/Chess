@@ -91,4 +91,43 @@ public class Player {
 
     return false;
   }
+
+  public boolean isMoveChecked(Board board, Piece primary, Vec2 pPos, Piece secondary,
+                               Vec2 sPos) {
+    Piece oPrimary = primary;
+    removePiece(primary);
+
+    Piece nPrimary = primary.clone();
+    nPrimary.pos = pPos;
+    addPiece(nPrimary);
+
+    boolean checked;
+    if (secondary == null && sPos == null) {
+      checked = isChecked(board, board.turn);
+    }
+
+    else {
+      Piece oSecondary = secondary.clone();
+      removePiece(oSecondary);
+
+      if (sPos == null) {
+        checked = isChecked(board, board.turn);
+      }
+
+      else {
+        Piece nSecondary = secondary.clone();
+        nSecondary.pos = sPos;
+        addPiece(nSecondary);
+
+        checked = isChecked(board, board.turn);
+        removePiece(nSecondary);
+      }
+      addPiece(oSecondary);
+    }
+
+    removePiece(nPrimary);
+    addPiece(oPrimary);
+
+    return checked;
+  }
 }
