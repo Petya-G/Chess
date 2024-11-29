@@ -1,9 +1,9 @@
 package main.java.com.ui;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.util.Map;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import main.java.com.highscore.HighScoreManager;
 
 public class HighScorePanel extends JPanel {
@@ -18,19 +18,33 @@ public class HighScorePanel extends JPanel {
   public void updateDisplay() {
     removeAll();
     Map<String, Integer> scores = highScoreManager.getHighScores();
-    StringBuilder scoreText = new StringBuilder("<html><h1>High Scores</h1>");
 
+    // Custom TableModel that makes cells uneditable
+    DefaultTableModel model = new DefaultTableModel() {
+      @Override
+      public boolean isCellEditable(int row, int column) {
+        return false; // All cells are non-editable
+      }
+    };
+
+    model.addColumn("Player");
+    model.addColumn("Score");
+
+    // Populate the table with high score data
     for (Map.Entry<String, Integer> entry : scores.entrySet()) {
-      scoreText.append(entry.getKey())
-          .append(": ")
-          .append(entry.getValue())
-          .append("<br>");
+      model.addRow(new Object[] {entry.getKey(), entry.getValue()});
     }
 
-    scoreText.append("</html>");
-    JLabel scoresLabel = new JLabel(scoreText.toString());
-    add(scoresLabel, BorderLayout.CENTER);
-    revalidate();
-    repaint();
+    // Create the table with the model
+    JTable scoresTable = new JTable(model);
+    scoresTable.setFillsViewportHeight(
+        true); // Make the table fill the viewport
+
+    // Add the table to a JScrollPane for better usability
+    JScrollPane scrollPane = new JScrollPane(scoresTable);
+    add(scrollPane, BorderLayout.CENTER);
+
+    revalidate(); // Revalidate the panel to reflect changes
+    repaint();    // Repaint the panel
   }
 }
