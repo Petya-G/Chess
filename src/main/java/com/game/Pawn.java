@@ -32,6 +32,7 @@ public class Pawn extends Piece {
 
   @Override
   public boolean move(Vec2 newPos, Board board) {
+    boolean result = false;
     Piece attacked;
     if (newPos.equals(enpassantLeft(board))) {
       attacked = board.getPieceAt(new Vec2(pos.x - 1, pos.y), getOppositeColor());
@@ -39,6 +40,7 @@ public class Pawn extends Piece {
           null)) {
         if (super.move(newPos, board))
           board.getNextPlayer().removePiece(attacked);
+          result = true;
       }
     }
 
@@ -48,21 +50,22 @@ public class Pawn extends Piece {
           null)) {
         if (super.move(newPos, board))
           board.getNextPlayer().removePiece(attacked);
+          result = true;
       }
     }
 
     else if (newPos.equals(moveTwo(board))) {
       if (super.move(newPos, board)) {
         moved2 = board.turn;
-        return true;
+          result = true;
       }
     }
 
     else if (super.move(newPos, board)) {
-      return true;
+          result = true;
     }
 
-    return false;
+    return result;
   }
 
   public Vec2 moveTwo(Board board) {
@@ -141,5 +144,35 @@ public class Pawn extends Piece {
       }
     }
     return null;
+  }
+
+  public boolean isPromotable() {
+    return (color == Color.WHITE && pos.y == 7) || (color == Color.BLACK && pos.y == 0);
+  }
+
+  public void promoteTo(Type type, Board board) {
+    if (isPromotable()) {
+      Piece newPiece = null;
+
+      switch (type) {
+        case QUEEN:
+          newPiece = new Queen(color, pos);
+          break;
+        case ROOK:
+          newPiece = new Rook(color, pos);
+          break;
+        case BISHOP:
+          newPiece = new Bishop(color, pos);
+          break;
+        case KNIGHT:
+          newPiece = new Knight(color, pos);
+          break;
+        default:
+          break;
+      }
+
+      board.getPlayer().removePiece(this);
+      board.getPlayer().addPiece(newPiece);
+    }
   }
 }

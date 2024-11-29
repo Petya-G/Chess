@@ -134,6 +134,15 @@ public class Board {
     return false;
   }
 
+  public Pawn getPromotable() {
+    return (Pawn) getPlayer().pieces.stream()
+        .filter(p -> p instanceof Pawn)
+        .map(p -> (Pawn) p)
+        .filter(Pawn::isPromotable)
+        .findFirst()
+        .orElse(null);
+  }
+
   public String MovePieceTo(Piece piece, Vec2 pos) {
     if (getPlayer().isChecked(this, turn)) {
       if (((King) getPlayer().getPiece(Type.KING))
@@ -154,6 +163,7 @@ public class Board {
       if (attacked != null) {
         getNextPlayer().removePiece(attacked);
       }
+
       changeTurn();
     }
     return null;

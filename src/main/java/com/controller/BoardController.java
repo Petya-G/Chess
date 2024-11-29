@@ -1,7 +1,9 @@
 package main.java.com.controller;
 
 import main.java.com.game.Board;
+import main.java.com.game.Pawn;
 import main.java.com.game.Piece;
+import main.java.com.game.Piece.Type;
 import main.java.com.game.Vec2;
 import main.java.com.ui.BoardPanel;
 
@@ -14,15 +16,22 @@ public class BoardController {
   String result;
 
   public BoardController(BoardPanel boardPanel, String player1Name,
-                         String player2Name) {
+      String player2Name) {
     this.boardPanel = boardPanel;
     this.board = new Board(player1Name, player2Name, boardSize, null);
     board.setUpBoard();
   }
 
-public int getSize() { return boardSize; }
+  public int getSize() {
+    return boardSize;
+  }
 
   public void updateBoard() {
+      Pawn pawn = board.getPromotable() ;
+      if(pawn != null){
+        promotion(pawn);
+      }
+
     if (selectedPiece != null && selectedTilePos != null) {
 
       result = board.MovePieceTo(selectedPiece, selectedTilePos);
@@ -30,13 +39,14 @@ public int getSize() { return boardSize; }
         boardPanel.showResult(result);
       }
 
+
       selectedPiece = null;
       selectedTilePos = null;
     }
     boardPanel.clearImages();
     for (Piece piece : board.getPieces()) {
       boardPanel.addImageTo(piece.getImage(), piece.getPos().x,
-                            piece.getPos().y);
+          piece.getPos().y);
     }
   }
 
@@ -55,5 +65,10 @@ public int getSize() { return boardSize; }
 
   public void resign() {
     boardPanel.showResult(board.getNextPlayer().name);
+  }
+
+  public void promotion(Pawn pawn) {
+    Type type = boardPanel.promptForPromotion();
+    pawn.promoteTo(type, board);
   }
 }

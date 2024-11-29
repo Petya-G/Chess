@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import main.java.com.controller.BoardController;
+import main.java.com.game.Piece.Type;
 import main.java.com.game.Vec2;
 
 public class BoardPanel extends JPanel {
@@ -206,5 +207,35 @@ public class BoardPanel extends JPanel {
 
     window.hsPanel.updateDisplay();
     window.showPanel("HighScores");
+  }
+
+  public static Type promptForPromotion() {
+    String[] options = { "Queen", "Rook", "Bishop", "Knight" };
+    int choice = JOptionPane.showOptionDialog(
+        null,
+        "Promote your pawn to:",
+        "Pawn Promotion",
+        JOptionPane.DEFAULT_OPTION,
+        JOptionPane.QUESTION_MESSAGE,
+        null,
+        options,
+        options[0]);
+
+    if (choice == -1) {
+      return null;
+    }
+
+    switch (choice) {
+      case 0:
+        return Type.QUEEN;
+      case 1:
+        return Type.ROOK;
+      case 2:
+        return Type.BISHOP;
+      case 3:
+        return Type.KNIGHT;
+      default:
+        return null;
+    }
   }
 }
