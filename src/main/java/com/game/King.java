@@ -16,7 +16,7 @@ public class King extends Piece {
 
   @Override
   public boolean move(Vec2 newPos, Board board) {
-    if (pos.equals(kingsideCastle(board))) {
+    if (newPos.equals(kingsideCastle(board))) {
       Rook rook = getKingsideRook(board);
       if (!board.getPlayer().isMoveChecked(board, this, pos, rook,
           getKingsideRookPos()) &&
@@ -28,7 +28,7 @@ public class King extends Piece {
       }
     }
 
-    else if (pos.equals(queensideCastle(board))) {
+    else if (newPos.equals(queensideCastle(board))) {
       Rook rook = getQueensideRook(board);
       if (!board.getPlayer().isMoveChecked(board, this, pos, rook,
           getQueensideRookPos()) &&

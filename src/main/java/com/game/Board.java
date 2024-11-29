@@ -2,6 +2,9 @@ package main.java.com.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import main.java.com.game.Piece.Color;
 import main.java.com.game.Piece.Type;
 
@@ -45,12 +48,7 @@ public class Board {
   }
 
   public List<Vec2> clipMovesToBoard(List<Vec2> moves) {
-    for (Vec2 move : moves) {
-      if (!isWithinBounds(move)) {
-        moves.remove(move);
-      }
-    }
-    return moves;
+    return moves.stream().filter(m -> isWithinBounds(m)).collect(Collectors.toList());
   }
 
   public Color getTurn() {
@@ -62,7 +60,7 @@ public class Board {
   }
 
   public Player getNextPlayer() {
-    return getPlayer(turn + 1 % 2 == 0 ? Color.WHITE : Color.BLACK);
+    return getPlayer((turn + 1) % 2 == 0 ? Color.WHITE : Color.BLACK);
   }
 
   public Player getPlayer(Color color) {
@@ -154,10 +152,7 @@ public class Board {
 
     if (piece.move(pos, this)) {
       if (attacked != null) {
-        if (piece.getOppositeColor() == Color.WHITE)
-          player1.removePiece(attacked);
-        else
-          player2.removePiece(attacked);
+        getNextPlayer().removePiece(attacked);
       }
       changeTurn();
     }

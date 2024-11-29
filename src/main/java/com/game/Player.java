@@ -13,10 +13,6 @@ public class Player {
 
   public Player(String name, Color color) {
     this.color = color;
-    if (color == Color.WHITE && name.length() == 0)
-      this.name = "Player1";
-    else if (color == Color.BLACK && name.length() == 0)
-      this.name = "Player2";
     this.name = name;
     this.pieces = new ArrayList<>();
   }
@@ -27,27 +23,28 @@ public class Player {
         pieces.add(new Pawn(color, new Vec2(i, 1)));
       }
       pieces.add(new Rook(color, new Vec2(0, 0)));
-      pieces.add(new Knight(color, new Vec2(1, 0)));
-      pieces.add(new Bishop(color, new Vec2(2, 0)));
-      pieces.add(new Queen(color, new Vec2(3, 0)));
-      //			pieces.add(new King(color, new Vec2(4, 0)));
-      pieces.add(new Bishop(color, new Vec2(5, 0)));
-      pieces.add(new Knight(color, new Vec2(6, 0)));
+      // pieces.add(new Knight(color, new Vec2(1, 0)));
+      // pieces.add(new Bishop(color, new Vec2(2, 0)));
+      // pieces.add(new Queen(color, new Vec2(3, 0)));
+      pieces.add(new King(color, new Vec2(4, 0)));
+      // pieces.add(new Bishop(color, new Vec2(5, 0)));
+      // pieces.add(new Knight(color, new Vec2(6, 0)));
       pieces.add(new Rook(color, new Vec2(7, 0)));
 
-      pieces.add(new King(color, new Vec2(1, 5)));
     } else {
       for (int i = 0; i < 1; i++) {
         pieces.add(new Pawn(color, new Vec2(i, 6)));
       }
       pieces.add(new Rook(color, new Vec2(0, 7)));
-      // pieces.add(new Knight(color, new Vec2(1, 7)));
-      // pieces.add(new Bishop(color, new Vec2(2, 7)));
-      // pieces.add(new Queen(color, new Vec2(3, 7)));
+      pieces.add(new Knight(color, new Vec2(1, 7)));
+      pieces.add(new Bishop(color, new Vec2(2, 7)));
+      pieces.add(new Queen(color, new Vec2(3, 7)));
       pieces.add(new King(color, new Vec2(4, 7)));
-      // pieces.add(new Bishop(color, new Vec2(5, 7)));
-      // pieces.add(new Knight(color, new Vec2(6, 7)));
+      pieces.add(new Bishop(color, new Vec2(5, 7)));
+      pieces.add(new Knight(color, new Vec2(6, 7)));
       pieces.add(new Rook(color, new Vec2(7, 7)));
+
+      pieces.add(new Pawn(color, new Vec2(3, 3)));
     }
   }
 
@@ -122,7 +119,7 @@ public class Player {
         checked = isChecked(board, board.turn);
         board.getNextPlayer().removePiece(nSecondary);
       }
-      addPiece(oSecondary);
+      board.getNextPlayer().addPiece(oSecondary);
     }
 
     removePiece(nPrimary);

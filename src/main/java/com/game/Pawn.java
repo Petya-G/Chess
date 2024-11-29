@@ -33,28 +33,32 @@ public class Pawn extends Piece {
   @Override
   public boolean move(Vec2 newPos, Board board) {
     Piece attacked;
-    if (pos.equals(enpassantLeft(board))) {
+    if (newPos.equals(enpassantLeft(board))) {
       attacked = board.getPieceAt(new Vec2(pos.x - 1, pos.y), getOppositeColor());
       if (!board.getPlayer().isMoveChecked(board, this, newPos, attacked,
           null)) {
         if (super.move(newPos, board))
-          board.removePiece(attacked);
+          board.getNextPlayer().removePiece(attacked);
       }
     }
 
-    else if (pos.equals(enpassantRight(board))) {
+    else if (newPos.equals(enpassantRight(board))) {
       attacked = board.getPieceAt(new Vec2(pos.x + 1, pos.y), getOppositeColor());
       if (!board.getPlayer().isMoveChecked(board, this, newPos, attacked,
           null)) {
         if (super.move(newPos, board))
-          board.removePiece(attacked);
+          board.getNextPlayer().removePiece(attacked);
+      }
+    }
+
+    else if (newPos.equals(moveTwo(board))) {
+      if (super.move(newPos, board)) {
+        moved2 = board.turn;
+        return true;
       }
     }
 
     else if (super.move(newPos, board)) {
-      if (pos.equals(this.moveTwo(board))) {
-        moved2 = board.turn;
-      }
       return true;
     }
 
