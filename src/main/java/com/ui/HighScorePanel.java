@@ -17,7 +17,7 @@ public class HighScorePanel extends JPanel {
 
   public void updateDisplay() {
     removeAll();
-    Map<String, Integer> scores = highScoreManager.getHighScores();
+    Map<String, Float> scores = highScoreManager.getHighScores();
 
     DefaultTableModel model = new DefaultTableModel() {
       @Override
@@ -29,7 +29,7 @@ public class HighScorePanel extends JPanel {
     model.addColumn("Player");
     model.addColumn("Score");
 
-    for (Map.Entry<String, Integer> entry : scores.entrySet()) {
+    for (Map.Entry<String, Float> entry : scores.entrySet()) {
       model.addRow(new Object[] {entry.getKey(), entry.getValue()});
     }
 

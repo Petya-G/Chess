@@ -102,6 +102,19 @@ public class BoardPanel extends JPanel {
       buttonPanel.add(resignButton);
       resignButton.addActionListener(e -> { boardCtrl.resign(); });
       buttonPanel.add(drawButton);
+      drawButton.addActionListener(e -> {
+        JPanel panel = new JPanel();
+        panel.add(new JLabel(boardCtrl.board.getCurrentPlayer().name +
+                             " is asking for draw."));
+
+        int optionResult = JOptionPane.showConfirmDialog(
+            this, panel, "Draw request", JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.PLAIN_MESSAGE);
+
+        if (optionResult == JOptionPane.OK_OPTION) {
+          showResult("Draw");
+        }
+      });
       buttonPanel.add(exitButton);
       exitButton.addActionListener(e -> { window.showPanel("MainMenu"); });
 
@@ -169,19 +182,22 @@ public class BoardPanel extends JPanel {
     tiles[x][y].setIcon(image);
   }
 
-  public void ShowResult(String result) {
+  public void showResult(String result) {
     JPanel panel = new JPanel();
-    String message = result != "Draw" ? result + " won." : result + ".";
+    String message = "Draw".equals(result) ? result + "." : result + " won.";
     panel.add(new JLabel(message));
 
-    int optionResult = JOptionPane.showConfirmDialog(
-        this, panel, "Show HighScores", JOptionPane.OK_CANCEL_OPTION,
-        JOptionPane.PLAIN_MESSAGE);
-
-    if (optionResult == JOptionPane.OK_OPTION) {
-      window.hsPanel.highScoreManager.incrementHighScore(result);
-      window.hsPanel.updateDisplay();
-      window.showPanel("HighScores");
+    JOptionPane.showMessageDialog(this, panel, "Game Result", JOptionPane.PLAIN_MESSAGE);
+    if ("Draw".equals(result)) {
+        window.hsPanel.highScoreManager.incrementHighScore(
+            boardCtrl.board.player1.name, 0.5f);
+        window.hsPanel.highScoreManager.incrementHighScore(
+            boardCtrl.board.player2.name, 0.5f);
+    } else {
+        window.hsPanel.highScoreManager.incrementHighScore(result, 1);
     }
+
+    window.hsPanel.updateDisplay();
+    window.showPanel("HighScores");
   }
 }

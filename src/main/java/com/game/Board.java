@@ -2,7 +2,6 @@ package main.java.com.game;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import main.java.com.game.Piece.Color;
 import main.java.com.game.Piece.Type;
 
@@ -134,6 +133,35 @@ public class Board {
     return checked;
   }
 
+  public boolean isOnSameColoredTile(Piece p1, Piece p2) {
+    return (p1.pos.x + p1.pos.y % 2) == (p2.pos.x + p2.pos.y % 2);
+  }
+
+  public boolean isDraw() {
+    if (player1.countType(null) == 1 && player2.countType(null) == 1)
+      return true;
+    if (player1.countType(null) == 1 && player2.countType(null) == 2 &&
+        player2.countType(Type.BISHOP) == 1)
+      return true;
+    if (player2.countType(null) == 1 && player1.countType(null) == 2 &&
+        player1.countType(Type.BISHOP) == 1)
+      return true;
+
+    if (player1.countType(null) == 1 && player2.countType(null) == 2 &&
+        player2.countType(Type.KNIGHT) == 1)
+      return true;
+    if (player2.countType(null) == 1 && player1.countType(null) == 2 &&
+        player1.countType(Type.KNIGHT) == 1)
+      return true;
+
+    if (player1.countType(null) == 2 && player1.countType(Type.BISHOP) == 1 &&
+        player2.countType(null) == 2 && player2.countType(Type.BISHOP) == 1 &&
+        isOnSameColoredTile(player1.getPiece(Type.BISHOP),
+                            player2.getPiece(Type.BISHOP)))
+      return true;
+    return false;
+  }
+
   public String MovePieceTo(Piece piece, Vec2 pos) {
     if (getCurrentPlayer().isChecked(this, turn)) {
       System.out.println(getCurrentPlayer().name + " checked");
@@ -141,13 +169,16 @@ public class Board {
         return null;
       }
 
-      if (getCurrentPlayer()
-              .getKing()
+      if (((King)getCurrentPlayer().getPiece(Type.KING))
               .getMovesNotChecked(pos, turn, this)
               .size() == 0) {
         changeTurn();
         return getNextPlayer().name;
       }
+    }
+
+    if(isDraw()){
+      return "Draw";
     }
 
     boolean moved = false;

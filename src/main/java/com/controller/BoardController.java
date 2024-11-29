@@ -27,7 +27,7 @@ public int getSize() { return boardSize; }
 
       result = board.MovePieceTo(selectedPiece, selectedTilePos);
       if (result != null) {
-        boardPanel.ShowResult(result);
+        boardPanel.showResult(result);
       }
 
       selectedPiece = null;
@@ -54,6 +54,6 @@ public int getSize() { return boardSize; }
   }
 
   public void resign() {
-    boardPanel.ShowResult(board.getNextPlayer().name);
+    boardPanel.showResult(board.getNextPlayer().name);
   }
 }

@@ -19,7 +19,7 @@ import javax.json.JsonWriter;
 public class HighScoreManager {
   private static final String FILE_PATH =
       "highscores.json"; // Path to the JSON file
-  private Map<String, Integer> highScores;
+  private Map<String, Float> highScores;
 
   public HighScoreManager() {
     highScores = new HashMap<>();
@@ -36,7 +36,7 @@ public class HighScoreManager {
       JsonArray jsonArray = reader.readArray();
       for (JsonObject jsonObject : jsonArray.getValuesAs(JsonObject.class)) {
         String name = jsonObject.getString("name");
-        int score = jsonObject.getInt("highscore");
+        float score = jsonObject.getInt("highscore");
         highScores.put(name, score);
       }
     } catch (IOException e) {
@@ -53,14 +53,14 @@ public class HighScoreManager {
     }
   }
 
-  public void incrementHighScore(String name) {
-    highScores.put(name, highScores.getOrDefault(name, 0) + 1);
+  public void incrementHighScore(String name, float score) {
+    highScores.put(name, highScores.getOrDefault(name, (float)0) + score);
     saveHighScores();
   }
 
   private void saveHighScores() {
     JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-    for (Map.Entry<String, Integer> entry : highScores.entrySet()) {
+    for (Map.Entry<String, Float> entry : highScores.entrySet()) {
       JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
       objectBuilder.add("name", entry.getKey());
       objectBuilder.add("highscore", entry.getValue());
@@ -75,5 +75,5 @@ public class HighScoreManager {
     }
   }
 
-  public Map<String, Integer> getHighScores() { return highScores; }
+  public Map<String, Float> getHighScores() { return highScores; }
 }
