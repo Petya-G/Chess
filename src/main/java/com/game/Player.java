@@ -48,11 +48,24 @@ public class Player {
     }
   }
 
-  public List<Piece> getPieces() { return pieces; }
+  public List<Piece> getPieces() {
+    return pieces;
+  }
 
-  public void removePiece(Piece piece) { pieces.remove(piece); }
+  public void removePiece(Piece piece) {
+    pieces.remove(piece);
+  }
 
-  public void addPiece(Piece piece) { pieces.add(piece); }
+  public void addPiece(Piece piece) {
+    pieces.add(piece);
+  }
+
+  public Piece getPieceAt(Vec2 pos, Color color) {
+    return pieces.stream()
+        .filter(p -> p.pos.equals(pos) && p.color == color)
+        .findFirst()
+        .orElse(null);
+  }
 
   public Piece getPiece(Piece.Type type) {
     return pieces.stream()
@@ -64,11 +77,11 @@ public class Player {
   public int countType(Piece.Type type) {
     if (type == null)
       return pieces.size();
-    return (int)pieces.stream().filter(p -> p.getType() == type).count();
+    return (int) pieces.stream().filter(p -> p.getType() == type).count();
   }
 
   public boolean isChecked(Board board, int turn) {
-    King king = (King)getPiece(Type.KING);
+    King king = (King) getPiece(Type.KING);
     List<Vec2> moves = new ArrayList<>();
 
     if (color == Color.WHITE) {
@@ -90,7 +103,7 @@ public class Player {
   }
 
   public boolean isMoveChecked(Board board, Piece primary, Vec2 pPos, Piece secondary,
-                               Vec2 sPos) {
+      Vec2 sPos) {
     Piece oPrimary = primary;
     removePiece(primary);
 
@@ -105,21 +118,23 @@ public class Player {
 
     else {
       Piece oSecondary = secondary.clone();
-      board.getNextPlayer().removePiece(secondary);
 
       if (sPos == null) {
+        board.getNextPlayer().removePiece(secondary);
         checked = isChecked(board, board.turn);
+        board.getNextPlayer().addPiece(oSecondary);
       }
 
       else {
-        Piece nSecondary = secondary.clone();
+        board.getPlayer().removePiece(secondary);
+        Piece nSecondary = oSecondary.clone();
         nSecondary.pos = sPos;
-        board.getNextPlayer().addPiece(nSecondary);
+        board.getPlayer().addPiece(nSecondary);
 
         checked = isChecked(board, board.turn);
-        board.getNextPlayer().removePiece(nSecondary);
+        board.getPlayer().removePiece(nSecondary);
+        board.getPlayer().addPiece(oSecondary);
       }
-      board.getNextPlayer().addPiece(oSecondary);
     }
 
     removePiece(nPrimary);

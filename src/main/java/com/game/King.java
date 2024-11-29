@@ -21,8 +21,11 @@ public class King extends Piece {
       if (!board.getPlayer().isMoveChecked(board, this, pos, rook,
           getKingsideRookPos()) &&
           rook.firstMove && this.firstMove) {
-        if (super.move(newPos, board) &&
-            rook.move(getKingsideRookPos(), board)) {
+        if (super.move(newPos, board)) {
+          board.getPlayer().removePiece(rook);
+          rook.pos = getKingsideRookPos();
+          rook.firstMove = false;
+          board.getPlayer().addPiece(rook);
           return true;
         }
       }
@@ -33,8 +36,11 @@ public class King extends Piece {
       if (!board.getPlayer().isMoveChecked(board, this, pos, rook,
           getQueensideRookPos()) &&
           rook.firstMove && this.firstMove) {
-        if (super.move(newPos, board) &&
-            rook.move(getQueensideRookPos(), board)) {
+        if (super.move(newPos, board)) {
+          board.getPlayer().removePiece(rook);
+          rook.pos = getQueensideRookPos();
+          rook.firstMove = false;
+          board.getPlayer().addPiece(rook);
           return true;
         }
       }
@@ -90,7 +96,7 @@ public class King extends Piece {
     Vec2 qc = queensideCastle(board);
     if (qc != null)
       moves.add(qc);
-    Vec2 kc = queensideCastle(board);
+    Vec2 kc = kingsideCastle(board);
     if (kc != null)
       moves.add(kc);
 
@@ -98,11 +104,11 @@ public class King extends Piece {
   }
 
   public Rook getKingsideRook(Board board) {
-    return (Rook) board.getPieceAt(new Vec2(pos.x + 3, pos.y), color);
+    return (Rook) board.getPlayer().getPieceAt(new Vec2(pos.x + 3, pos.y), color);
   }
 
   public Rook getQueensideRook(Board board) {
-    return (Rook) board.getPieceAt(new Vec2(pos.x - 4, pos.y), color);
+    return (Rook) board.getPlayer().getPieceAt(new Vec2(pos.x - 4, pos.y), color);
   }
 
   public Vec2 getKingsideRookPos() {
