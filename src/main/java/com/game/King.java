@@ -26,6 +26,7 @@ public class King extends Piece {
           rook.pos = getKingsideRookPos();
           rook.firstMove = false;
           board.getPlayer().addPiece(rook);
+          lastMove = "O-O";
           return true;
         }
       }
@@ -41,6 +42,7 @@ public class King extends Piece {
           rook.pos = getQueensideRookPos();
           rook.firstMove = false;
           board.getPlayer().addPiece(rook);
+          lastMove = "O-O-O";
           return true;
         }
       }

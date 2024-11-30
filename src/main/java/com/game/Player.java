@@ -21,27 +21,27 @@ public class Player {
       for (int i = 0; i < size; i++) {
         pieces.add(new Pawn(color, new Vec2(i, 1)));
       }
-      pieces.add(new Rook(color, new Vec2(0, 0)));
       pieces.add(new Knight(color, new Vec2(1, 0)));
       pieces.add(new Bishop(color, new Vec2(2, 0)));
       pieces.add(new Queen(color, new Vec2(3, 0)));
-      pieces.add(new King(color, new Vec2(4, 0)));
       pieces.add(new Bishop(color, new Vec2(5, 0)));
       pieces.add(new Knight(color, new Vec2(6, 0)));
+      pieces.add(new Rook(color, new Vec2(0, 0)));
       pieces.add(new Rook(color, new Vec2(7, 0)));
+      pieces.add(new King(color, new Vec2(4, 0)));
 
     } else {
       for (int i = 0; i < size; i++) {
         pieces.add(new Pawn(color, new Vec2(i, 6)));
       }
-      pieces.add(new Rook(color, new Vec2(0, 7)));
       pieces.add(new Knight(color, new Vec2(1, 7)));
       pieces.add(new Bishop(color, new Vec2(2, 7)));
       pieces.add(new Queen(color, new Vec2(3, 7)));
-      pieces.add(new King(color, new Vec2(4, 7)));
       pieces.add(new Bishop(color, new Vec2(5, 7)));
       pieces.add(new Knight(color, new Vec2(6, 7)));
+      pieces.add(new Rook(color, new Vec2(0, 7)));
       pieces.add(new Rook(color, new Vec2(7, 7)));
+      pieces.add(new King(color, new Vec2(4, 7)));
     }
   }
 
@@ -127,14 +127,14 @@ public class Player {
       }
 
       else {
-        board.getPlayer(primary.getOppositeColor()).removePiece(secondary);
+        board.getPlayer(primary.getColor()).removePiece(secondary);
         Piece nSecondary = oSecondary.clone();
         nSecondary.pos = sPos;
-        board.getPlayer(primary.getOppositeColor()).addPiece(nSecondary);
+        board.getPlayer(primary.getColor()).addPiece(nSecondary);
 
         checked = isChecked(board, board.turn);
-        board.getPlayer(primary.getOppositeColor()).removePiece(nSecondary);
-        board.getPlayer(primary.getOppositeColor()).addPiece(oSecondary);
+        board.getPlayer(primary.getColor()).removePiece(nSecondary);
+        board.getPlayer(primary.getColor()).addPiece(oSecondary);
       }
     }
 
