@@ -146,8 +146,14 @@ public class BoardPanel extends JPanel {
     public MovesPanel() {
       setLayout(new BorderLayout());
 
-      movesTableModel = new DefaultTableModel();
-      movesTableModel.addColumn("Move");
+      movesTableModel = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+          return false;
+        }
+      };
+
+      movesTableModel.addColumn("Moves");
 
       movesTable = new JTable(movesTableModel);
       JScrollPane scrollPane = new JScrollPane(movesTable);

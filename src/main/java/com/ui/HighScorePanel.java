@@ -30,7 +30,7 @@ public class HighScorePanel extends JPanel {
     model.addColumn("Score");
 
     for (Map.Entry<String, Float> entry : scores.entrySet()) {
-      model.addRow(new Object[] {entry.getKey(), entry.getValue()});
+      model.addRow(new Object[] { entry.getKey(), entry.getValue() });
     }
 
     JTable scoresTable = new JTable(model);
