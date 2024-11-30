@@ -106,11 +106,11 @@ public class Player {
   public boolean isMoveChecked(Board board, Piece primary, Vec2 pPos, Piece secondary,
       Vec2 sPos) {
     Piece oPrimary = primary;
-    removePiece(primary);
+    board.getPlayer(primary.getColor()).removePiece(primary);
 
     Piece nPrimary = primary.clone();
     nPrimary.pos = pPos;
-    addPiece(nPrimary);
+    board.getPlayer(primary.getColor()).addPiece(nPrimary);
 
     boolean checked;
     if (secondary == null && sPos == null) {
@@ -121,30 +121,31 @@ public class Player {
       Piece oSecondary = secondary.clone();
 
       if (sPos == null) {
-        board.getNextPlayer().removePiece(secondary);
+        board.getPlayer(primary.getOppositeColor()).removePiece(secondary);
         checked = isChecked(board, board.turn);
-        board.getNextPlayer().addPiece(oSecondary);
+        board.getPlayer(primary.getOppositeColor()).addPiece(oSecondary);
       }
 
       else {
-        board.getPlayer().removePiece(secondary);
+        board.getPlayer(primary.getOppositeColor()).removePiece(secondary);
         Piece nSecondary = oSecondary.clone();
         nSecondary.pos = sPos;
-        board.getPlayer().addPiece(nSecondary);
+        board.getPlayer(primary.getOppositeColor()).addPiece(nSecondary);
 
         checked = isChecked(board, board.turn);
-        board.getPlayer().removePiece(nSecondary);
-        board.getPlayer().addPiece(oSecondary);
+        board.getPlayer(primary.getOppositeColor()).removePiece(nSecondary);
+        board.getPlayer(primary.getOppositeColor()).addPiece(oSecondary);
       }
     }
 
-    removePiece(nPrimary);
-    addPiece(oPrimary);
+    board.getPlayer(primary.getColor()).removePiece(nPrimary);
+    board.getPlayer(primary.getColor()).addPiece(oPrimary);
 
     return checked;
   }
 
   public boolean isCheckMate(Vec2 pos, Board board) {
-    return (((King) getPiece(Type.KING)).getMovesNotChecked(pos, board.turn, board).size() == 0) && board.getPlayer().isChecked(board, board.turn);
+    return (((King) getPiece(Type.KING)).getMovesNotChecked(pos, board.turn, board).size() == 0)
+        && board.getPlayer().isChecked(board, board.turn);
   }
 }

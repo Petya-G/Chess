@@ -35,22 +35,31 @@ public class Pawn extends Piece {
     boolean result = false;
     Piece attacked;
     if (newPos.equals(enpassantLeft(board))) {
-      attacked = board.getPieceAt(new Vec2(pos.x - 1, pos.y), getOppositeColor());
+      attacked = board.getNextPlayer().getPieceAt(new Vec2(pos.x - 1, pos.y), getOppositeColor());
       if (!board.getPlayer().isMoveChecked(board, this, newPos, attacked,
           null)) {
-        if (super.move(newPos, board))
+        if (super.move(newPos, board)) {
+          super.updateLastMove(newPos, attacked, board);
+          String s = lastMove;
           board.getNextPlayer().removePiece(attacked);
-        result = true;
+          lastMove = s;
+          result = true;
+        }
+
       }
     }
 
     else if (newPos.equals(enpassantRight(board))) {
-      attacked = board.getPieceAt(new Vec2(pos.x + 1, pos.y), getOppositeColor());
+      attacked = board.getNextPlayer().getPieceAt(new Vec2(pos.x + 1, pos.y), getOppositeColor());
       if (!board.getPlayer().isMoveChecked(board, this, newPos, attacked,
           null)) {
-        if (super.move(newPos, board))
+        if (super.move(newPos, board)) {
+          super.updateLastMove(newPos, attacked, board);
+          String s = lastMove;
           board.getNextPlayer().removePiece(attacked);
-        result = true;
+          lastMove = s;
+          result = true;
+        }
       }
     }
 
@@ -176,7 +185,7 @@ public class Pawn extends Piece {
     board.getPlayer().addPiece(newPiece);
   }
 
-@Override
+  @Override
   public char getChar() {
     return '\0';
   }

@@ -47,27 +47,60 @@ public abstract class Piece {
 
   public abstract List<Vec2> getMoves(Board board);
 
-  private String formatMove(Vec2 newPos, Board board) {
+  private String formatMove(Vec2 newPos, Piece attacked, Board board) {
     StringBuilder pgnMove = new StringBuilder();
 
-    pgnMove.append(this.getChar()).append(newPos.toAlgebraic());
+    pgnMove.append(this.getChar());
 
-    Piece attacked = board.getPieceAt(newPos, getOppositeColor());
     if (attacked != null) {
       pgnMove.append('x');
     }
 
-    if(board.getNextPlayer().isMoveChecked(board, this, newPos, attacked, null)){
+    if (hasSameMoveOnColumn(newPos, board) && hasSameMoveOnRow(newPos, board)) {
+      pgnMove.append(this.toString());
+    }
+
+    else if (hasSameMoveOnColumn(newPos, board)) {
+      pgnMove.append(this.toString().charAt(0));
+    }
+
+    else if (hasSameMoveOnRow(newPos, board)) {
+      pgnMove.append(this.toString().charAt(1));
+    }
+
+    pgnMove.append(newPos.toAlgebraic());
+
+    if (board.getNextPlayer().isMoveChecked(board, this, newPos, attacked, null)) {
       pgnMove.append('+');
     }
 
-    else if(board.getNextPlayer().isCheckMate(newPos, board))
+    else if (board.getNextPlayer().isCheckMate(newPos, board))
       pgnMove.append('#');
     return pgnMove.toString();
   }
 
-  private void updateLastMove(Vec2 newPos, Board board) {
-    String moveString = formatMove(newPos, board);
+  public boolean hasSameMoveOnRow(Vec2 newPos, Board board) {
+    for (Piece p : board.getPlayer().getPieces()) {
+      for (Vec2 m : p.getMoves(board)) {
+        if (!p.equals(this) && p.pos.y == this.pos.y && newPos.equals(m))
+          return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean hasSameMoveOnColumn(Vec2 newPos, Board board) {
+    for (Piece p : board.getPlayer().getPieces()) {
+      for (Vec2 m : p.getMoves(board)) {
+        if (!p.equals(this) && p.pos.x == this.pos.x && newPos.equals(m))
+          return true;
+      }
+    }
+    return false;
+  }
+
+  protected void updateLastMove(Vec2 newPos, Piece attacked, Board board) {
+    String moveString = formatMove(newPos, attacked, board);
     if (moveString != null) {
       lastMove = moveString;
     }
@@ -78,7 +111,7 @@ public abstract class Piece {
     if (getMoves(board).contains(newPos) &&
         !board.getPlayer().isMoveChecked(board, this, newPos, attacked,
             null)) {
-      updateLastMove(newPos, board);
+      updateLastMove(newPos, attacked, board);
       this.pos = newPos;
       return true;
     }
