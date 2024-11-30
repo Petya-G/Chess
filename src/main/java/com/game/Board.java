@@ -2,28 +2,18 @@ package main.java.com.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import main.java.com.game.Piece.Color;
 import main.java.com.game.Piece.Type;
 
 public class Board {
-  enum Corner {
-    TOPRIGHT,
-    BOTTOMRIGHT,
-    BOTTOMLEFT,
-    TOPLEFT;
-  }
-
   public Player player1, player2;
   int size;
-  Corner corner;
   Color turnColor;
   int turn;
 
-  public Board(String player1Name, String player2Name, int size,
-      Corner corner) {
+  public Board(String player1Name, String player2Name, int size){
     this.player1 = new Player(player1Name, Color.WHITE);
     this.player2 = new Player(player2Name, Color.BLACK);
     this.size = size;
@@ -32,8 +22,8 @@ public class Board {
   }
 
   public void setUpBoard() {
-    player1.setUpPieces(size, corner);
-    player2.setUpPieces(size, corner);
+    player1.setUpPieces(size);
+    player2.setUpPieces(size);
   }
 
   public List<Piece> getPieces() {

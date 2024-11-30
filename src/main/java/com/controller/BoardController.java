@@ -18,7 +18,7 @@ public class BoardController {
   public BoardController(BoardPanel boardPanel, String player1Name,
       String player2Name) {
     this.boardPanel = boardPanel;
-    this.board = new Board(player1Name, player2Name, boardSize, null);
+    this.board = new Board(player1Name, player2Name, boardSize);
     board.setUpBoard();
   }
 

@@ -88,7 +88,7 @@ public abstract class Piece {
     return pos;
   }
 
-  void setPos(Vec2 pos) {
+  public void setPos(Vec2 pos) {
     this.pos = pos;
   }
 

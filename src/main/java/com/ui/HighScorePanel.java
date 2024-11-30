@@ -10,7 +10,7 @@ public class HighScorePanel extends JPanel {
   public HighScoreManager highScoreManager;
 
   public HighScorePanel() {
-    this.highScoreManager = new HighScoreManager();
+    this.highScoreManager = new HighScoreManager("highscores.json");
     setLayout(new BorderLayout());
     updateDisplay();
   }

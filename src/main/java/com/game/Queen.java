@@ -9,9 +9,9 @@ public class Queen extends Piece {
   public Queen(Color color, Vec2 pos) {
     super(color, pos);
     if (color == Color.WHITE)
-      this.image = new ImageIcon("src/main/java/comimages/Chess_qlt45.png");
+      this.image = new ImageIcon("src/main/java/com/images/Chess_qlt45.png");
     else
-      this.image = new ImageIcon("src/main/java/comimages/Chess_qdt45.png");
+      this.image = new ImageIcon("src/main/java/com/images/Chess_qdt45.png");
   }
 
   @Override

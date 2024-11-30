@@ -17,10 +17,11 @@ import javax.json.JsonReader;
 import javax.json.JsonWriter;
 
 public class HighScoreManager {
-  private static final String FILE_PATH = "highscores.json";
+  private String FILE_PATH;
   private Map<String, Float> highScores;
 
-  public HighScoreManager() {
+  public HighScoreManager(String FILE_PATH) {
+    this.FILE_PATH = FILE_PATH;
     highScores = new HashMap<>();
     loadHighScores();
   }

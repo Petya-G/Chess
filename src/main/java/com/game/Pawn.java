@@ -40,7 +40,7 @@ public class Pawn extends Piece {
           null)) {
         if (super.move(newPos, board))
           board.getNextPlayer().removePiece(attacked);
-          result = true;
+        result = true;
       }
     }
 
@@ -50,25 +50,26 @@ public class Pawn extends Piece {
           null)) {
         if (super.move(newPos, board))
           board.getNextPlayer().removePiece(attacked);
-          result = true;
+        result = true;
       }
     }
 
     else if (newPos.equals(moveTwo(board))) {
       if (super.move(newPos, board)) {
         moved2 = board.turn;
-          result = true;
+        result = true;
       }
     }
 
     else if (super.move(newPos, board)) {
-          result = true;
+      result = true;
     }
 
     return result;
   }
 
   public Vec2 moveTwo(Board board) {
+    sign = (color == Color.WHITE) ? 1 : -1;
     Vec2 move1 = new Vec2(pos.x, pos.y + 1 * sign);
     Vec2 move2 = new Vec2(pos.x, pos.y + 2 * sign);
 
@@ -78,6 +79,7 @@ public class Pawn extends Piece {
   }
 
   public Vec2 moveOne(Board board) {
+    sign = (color == Color.WHITE) ? 1 : -1;
     Vec2 move1 = new Vec2(pos.x, pos.y + 1 * sign);
 
     if (!board.hasPieceAt(move1))
@@ -151,28 +153,26 @@ public class Pawn extends Piece {
   }
 
   public void promoteTo(Type type, Board board) {
-    if (isPromotable()) {
-      Piece newPiece = null;
+    Piece newPiece = null;
 
-      switch (type) {
-        case QUEEN:
-          newPiece = new Queen(color, pos);
-          break;
-        case ROOK:
-          newPiece = new Rook(color, pos);
-          break;
-        case BISHOP:
-          newPiece = new Bishop(color, pos);
-          break;
-        case KNIGHT:
-          newPiece = new Knight(color, pos);
-          break;
-        default:
-          break;
-      }
-
-      board.getPlayer().removePiece(this);
-      board.getPlayer().addPiece(newPiece);
+    switch (type) {
+      case QUEEN:
+        newPiece = new Queen(color, pos);
+        break;
+      case ROOK:
+        newPiece = new Rook(color, pos);
+        break;
+      case BISHOP:
+        newPiece = new Bishop(color, pos);
+        break;
+      case KNIGHT:
+        newPiece = new Knight(color, pos);
+        break;
+      default:
+        break;
     }
+
+    board.getPlayer().removePiece(this);
+    board.getPlayer().addPiece(newPiece);
   }
 }

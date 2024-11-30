@@ -2,7 +2,6 @@ package main.java.com.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.java.com.game.Board.Corner;
 import main.java.com.game.Piece.Color;
 import main.java.com.game.Piece.Type;
 
@@ -17,40 +16,41 @@ public class Player {
     this.pieces = new ArrayList<>();
   }
 
-  public void setUpPieces(int size, Corner corner) {
+  public void setUpPieces(int size) {
     if (color == Color.WHITE) {
       for (int i = 0; i < size; i++) {
         pieces.add(new Pawn(color, new Vec2(i, 1)));
       }
       pieces.add(new Rook(color, new Vec2(0, 0)));
-      // pieces.add(new Knight(color, new Vec2(1, 0)));
-      // pieces.add(new Bishop(color, new Vec2(2, 0)));
-      // pieces.add(new Queen(color, new Vec2(3, 0)));
+      pieces.add(new Knight(color, new Vec2(1, 0)));
+      pieces.add(new Bishop(color, new Vec2(2, 0)));
+      pieces.add(new Queen(color, new Vec2(3, 0)));
       pieces.add(new King(color, new Vec2(4, 0)));
-      // pieces.add(new Bishop(color, new Vec2(5, 0)));
-      // pieces.add(new Knight(color, new Vec2(6, 0)));
+      pieces.add(new Bishop(color, new Vec2(5, 0)));
+      pieces.add(new Knight(color, new Vec2(6, 0)));
       pieces.add(new Rook(color, new Vec2(7, 0)));
 
-        pieces.add(new Pawn(color, new Vec2(1, 6)));
     } else {
-      // for (int i = 0; i < 1; i++) {
-      //   pieces.add(new Pawn(color, new Vec2(i, 6)));
-      // }
-      // pieces.add(new Rook(color, new Vec2(0, 7)));
-      // pieces.add(new Knight(color, new Vec2(1, 7)));
-      // pieces.add(new Bishop(color, new Vec2(2, 7)));
-      // pieces.add(new Queen(color, new Vec2(3, 7)));
+      for (int i = 0; i < size; i++) {
+        pieces.add(new Pawn(color, new Vec2(i, 6)));
+      }
+      pieces.add(new Rook(color, new Vec2(0, 7)));
+      pieces.add(new Knight(color, new Vec2(1, 7)));
+      pieces.add(new Bishop(color, new Vec2(2, 7)));
+      pieces.add(new Queen(color, new Vec2(3, 7)));
       pieces.add(new King(color, new Vec2(4, 7)));
-      // pieces.add(new Bishop(color, new Vec2(5, 7)));
-      // pieces.add(new Knight(color, new Vec2(6, 7)));
-      // pieces.add(new Rook(color, new Vec2(7, 7)));
-
-      pieces.add(new Pawn(color, new Vec2(3, 3)));
+      pieces.add(new Bishop(color, new Vec2(5, 7)));
+      pieces.add(new Knight(color, new Vec2(6, 7)));
+      pieces.add(new Rook(color, new Vec2(7, 7)));
     }
   }
 
   public List<Piece> getPieces() {
     return pieces;
+  }
+
+  public Color getColor() {
+    return color;
   }
 
   public void removePiece(Piece piece) {
