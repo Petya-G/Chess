@@ -18,8 +18,8 @@ public class Knight extends Piece {
   public List<Vec2> getMoves(Board board) {
     List<Vec2> moves = new ArrayList<>();
 
-    int[][] moveOffsets = {{2, 1}, {2, -1}, {-2, 1}, {-2, -1},
-                           {1, 2}, {1, -2}, {-1, 2}, {-1, -2}};
+    int[][] moveOffsets = { { 2, 1 }, { 2, -1 }, { -2, 1 }, { -2, -1 },
+        { 1, 2 }, { 1, -2 }, { -1, 2 }, { -1, -2 } };
 
     for (int[] offset : moveOffsets) {
       Vec2 move = new Vec2(pos.x + offset[0], pos.y + offset[1]);
@@ -38,5 +38,10 @@ public class Knight extends Piece {
   @Override
   public Piece clone() {
     return new Knight(color, pos);
+  }
+
+  @Override
+  public char getChar() {
+    return 'N';
   }
 }

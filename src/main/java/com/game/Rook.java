@@ -29,4 +29,9 @@ public class Rook extends Piece {
 	 r.firstMove = firstMove;
 	 return r;
   }
+
+  @Override
+  public char getChar() {
+    return 'R';
+  }
 }

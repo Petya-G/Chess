@@ -31,4 +31,9 @@ public class Queen extends Piece {
   public Queen clone() {
     return new Queen(color, pos);
   }
+
+  @Override
+  public char getChar() {
+    return 'Q';
+  }
 }

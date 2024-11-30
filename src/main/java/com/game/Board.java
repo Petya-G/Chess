@@ -12,13 +12,15 @@ public class Board {
   int size;
   Color turnColor;
   int turn;
+  public List<String> moves;
 
-  public Board(String player1Name, String player2Name, int size){
+  public Board(String player1Name, String player2Name, int size) {
     this.player1 = new Player(player1Name, Color.WHITE);
     this.player2 = new Player(player2Name, Color.BLACK);
     this.size = size;
     this.turnColor = Color.WHITE;
     this.turn = 0;
+    moves = new ArrayList<>();
   }
 
   public void setUpBoard() {
@@ -134,27 +136,37 @@ public class Board {
   }
 
   public String MovePieceTo(Piece piece, Vec2 pos) {
-    if (getPlayer().isChecked(this, turn)) {
-      if (((King) getPlayer().getPiece(Type.KING))
-          .getMovesNotChecked(pos, turn, this)
-          .size() == 0) {
-        changeTurn();
-        return getNextPlayer().name;
-      }
-    }
-
     if (isDraw()) {
       return "Draw";
     }
 
-    Piece attacked = getPieceAt(pos, piece.getOppositeColor());
-
     if (piece.move(pos, this)) {
+      if (turnColor == Color.WHITE) {
+        StringBuilder pgnMove = new StringBuilder();
+        pgnMove.append(Math.floor((turn + 2) / 2) + ". ");
+        pgnMove.append(piece.lastMove);
+        moves.add(pgnMove.toString());
+      }
+
+      else {
+        StringBuilder pgnMove = new StringBuilder(moves.getLast());
+        moves.removeLast();
+        pgnMove.append(" ");
+        pgnMove.append(piece.lastMove);
+        moves.add(pgnMove.toString());
+      }
+
+      Piece attacked = getPieceAt(pos, piece.getOppositeColor());
       if (attacked != null) {
         getNextPlayer().removePiece(attacked);
       }
 
       changeTurn();
+      if (getPlayer().isCheckMate(pos, this)) {
+        changeTurn();
+        return getNextPlayer().name;
+      }
+
     }
     return null;
   }

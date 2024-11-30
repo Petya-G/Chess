@@ -11,11 +11,13 @@ public abstract class Piece {
   Vec2 pos;
   ImageIcon image;
   boolean firstMove;
+  String lastMove;
 
   public Piece(Color color, Vec2 pos) {
     this.color = color;
     this.pos = pos;
     this.firstMove = true;
+    this.lastMove = "";
   }
 
   @Override
@@ -34,13 +36,49 @@ public abstract class Piece {
     return Objects.hash(color, pos);
   }
 
+  public abstract char getChar();
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(getChar()).append(pos.toAlgebraic());
+    return sb.toString();
+  }
+
   public abstract List<Vec2> getMoves(Board board);
+
+  private String formatMove(Vec2 newPos, Board board) {
+    StringBuilder pgnMove = new StringBuilder();
+
+    pgnMove.append(this.getChar()).append(newPos.toAlgebraic());
+
+    Piece attacked = board.getPieceAt(newPos, getOppositeColor());
+    if (attacked != null) {
+      pgnMove.append('x');
+    }
+
+    if(board.getNextPlayer().isMoveChecked(board, this, newPos, attacked, null)){
+      pgnMove.append('+');
+    }
+
+    else if(board.getNextPlayer().isCheckMate(newPos, board))
+      pgnMove.append('#');
+    return pgnMove.toString();
+  }
+
+  private void updateLastMove(Vec2 newPos, Board board) {
+    String moveString = formatMove(newPos, board);
+    if (moveString != null) {
+      lastMove = moveString;
+    }
+  }
 
   public boolean move(Vec2 newPos, Board board) {
     Piece attacked = board.getPieceAt(newPos, getOppositeColor());
     if (getMoves(board).contains(newPos) &&
         !board.getPlayer().isMoveChecked(board, this, newPos, attacked,
             null)) {
+      updateLastMove(newPos, board);
       this.pos = newPos;
       return true;
     }
@@ -119,10 +157,6 @@ public abstract class Piece {
         break;
       }
 
-      if (move.equals(new Vec2(0, 6))) {
-        int fasz = 0;
-        ;
-      }
       if (!board.hasPieceAt(move, color)) {
         moves.add(move);
       } else {

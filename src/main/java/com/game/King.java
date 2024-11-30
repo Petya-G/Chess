@@ -154,4 +154,9 @@ public class King extends Piece {
     k.firstMove = this.firstMove;
     return k;
   }
+
+  @Override
+  public char getChar() {
+    return 'K';
+  }
 }

@@ -71,4 +71,4 @@ public class KingTest {
         assertTrue(moves.contains(whiteKing.kingsideCastle(board)));
         assertTrue(moves.contains(whiteKing.queensideCastle(board)));
     }
-}
+              }

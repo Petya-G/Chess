@@ -25,4 +25,8 @@ public class Vec2 {
 	public int hashCode() {
 		return Objects.hash(x, y);
 	}
+
+	public String toAlgebraic() {
+		return (char) ('a' + x) + "" + (8 - y);
+	}
 }

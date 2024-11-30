@@ -143,4 +143,8 @@ public class Player {
 
     return checked;
   }
+
+  public boolean isCheckMate(Vec2 pos, Board board) {
+    return ((King) getPiece(Type.KING)).getMovesNotChecked(pos, board.turn, board).size() == 0;
+  }
 }

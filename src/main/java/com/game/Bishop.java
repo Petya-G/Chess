@@ -28,4 +28,9 @@ public class Bishop extends Piece {
 	public Piece clone(){
 		return new Bishop(color, pos);
 	}
+
+	@Override
+	public char getChar() {
+		return 'B';
+	}
 }

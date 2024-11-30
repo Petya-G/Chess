@@ -5,13 +5,20 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
+
 import main.java.com.controller.BoardController;
 import main.java.com.game.Piece.Type;
 import main.java.com.game.Vec2;
@@ -54,7 +61,7 @@ public class BoardPanel extends JPanel {
       setBackground((i + j) % 2 == 0 ? window.tileYellow : Window.tileGreen);
 
       if (j == 0) {
-        rowLabel.setText(Integer.toString(i + 1));
+        rowLabel.setText(Integer.toString(8 - i));
         rowLabel.setForeground(i % 2 == 1 ? Window.tileYellow
             : Window.tileGreen);
       }
@@ -90,6 +97,7 @@ public class BoardPanel extends JPanel {
     }
 
     ControlButton saveButton, resignButton, drawButton, exitButton;
+    MovesPanel movesPanel;
 
     public ControlPanel() {
 
@@ -125,7 +133,32 @@ public class BoardPanel extends JPanel {
         window.showPanel("MainMenu");
       });
 
+      movesPanel = new MovesPanel();
+      add(movesPanel, BorderLayout.CENTER);
       add(buttonPanel, BorderLayout.SOUTH);
+    }
+  }
+
+  class MovesPanel extends JPanel {
+    private JTable movesTable;
+    private DefaultTableModel movesTableModel;
+
+    public MovesPanel() {
+      setLayout(new BorderLayout());
+
+      movesTableModel = new DefaultTableModel();
+      movesTableModel.addColumn("Move");
+
+      movesTable = new JTable(movesTableModel);
+      JScrollPane scrollPane = new JScrollPane(movesTable);
+      add(scrollPane, BorderLayout.CENTER);
+    }
+
+    public void updateMoves(List<String> moves) {
+      movesTableModel.setRowCount(0);
+      for (String move : moves) {
+        movesTableModel.addRow(new Object[] { move });
+      }
     }
   }
 
@@ -172,9 +205,15 @@ public class BoardPanel extends JPanel {
     tiles[4][4].doClick();
 
     controlPanel = new ControlPanel();
-    add(controlPanel, BorderLayout.EAST);
+    JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, gridPanel, controlPanel);
+    splitPane.setDividerLocation(400);
+    splitPane.setResizeWeight(0.7);
 
-    add(gridPanel, BorderLayout.CENTER);
+    add(splitPane, BorderLayout.CENTER);
+  }
+
+  public void updateMovesPanel() {
+    controlPanel.movesPanel.updateMoves(boardCtrl.board.moves);
   }
 
   public void clearImages() {

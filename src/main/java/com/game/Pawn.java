@@ -175,4 +175,9 @@ public class Pawn extends Piece {
     board.getPlayer().removePiece(this);
     board.getPlayer().addPiece(newPiece);
   }
+
+@Override
+  public char getChar() {
+    return '\0';
+  }
 }

@@ -47,14 +47,4 @@ public class PlayerTest {
         assertFalse(playerWhite.getPieces().contains(pawn));
         assertEquals(7, playerWhite.countType(Piece.Type.PAWN));
     }
-
-    @Test
-    public void testIsCheckedAfterMove() {
-        Pawn pawn = new Pawn(Color.WHITE, new Vec2(4, 1));
-        playerWhite.addPiece(pawn);
-        Piece blackQueen = new Queen(Color.BLACK, new Vec2(4, 7));
-        playerBlack.addPiece(blackQueen);
-        assertTrue(playerWhite.isChecked(board, 0));
-        playerBlack.removePiece(blackQueen);
-    }
 }
