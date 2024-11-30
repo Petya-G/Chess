@@ -5,11 +5,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import main.java.com.controller.BoardController;
@@ -110,6 +116,23 @@ public class BoardPanel extends JPanel {
       exitButton = new ControlButton("Exit");
 
       buttonPanel.add(saveButton);
+      saveButton.addActionListener(e -> {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Specify a file to save");
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PGN files (*.pgn)", "pgn");
+        fileChooser.setFileFilter(filter);
+
+        int userSelection = fileChooser.showSaveDialog(ControlPanel.this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+          File fileToSave = fileChooser.getSelectedFile();
+          if (!fileToSave.getName().endsWith(".pgn")) {
+            fileToSave = new File(fileToSave.getAbsolutePath() + ".pgn");
+          }
+          boardCtrl.saveBoardTo(fileToSave);
+        }
+      });
       buttonPanel.add(resignButton);
       resignButton.addActionListener(e -> {
         boardCtrl.resign();

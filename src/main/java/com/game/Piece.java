@@ -50,7 +50,8 @@ public abstract class Piece {
   private String formatMove(Vec2 newPos, Piece attacked, Board board) {
     StringBuilder pgnMove = new StringBuilder();
 
-    pgnMove.append(this.getChar());
+    if (this.getChar() != ' ')
+      pgnMove.append(this.getChar());
 
     if (attacked != null) {
       pgnMove.append('x');

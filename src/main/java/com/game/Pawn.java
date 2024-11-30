@@ -187,6 +187,6 @@ public class Pawn extends Piece {
 
   @Override
   public char getChar() {
-    return '\0';
+    return ' ';
   }
 }

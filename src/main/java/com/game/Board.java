@@ -1,5 +1,9 @@
 package main.java.com.game;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -150,9 +154,9 @@ public class Board {
 
       else {
         String lastMove = moves.getLast();
-        StringBuilder pgnMove = new StringBuilder(lastMove); 
-        pgnMove.append(" "); 
-        pgnMove.append(piece.lastMove); 
+        StringBuilder pgnMove = new StringBuilder(lastMove);
+        pgnMove.append(" ");
+        pgnMove.append(piece.lastMove);
 
         moves.removeLast();
         moves.add(pgnMove.toString());
@@ -171,5 +175,32 @@ public class Board {
 
     }
     return null;
+  }
+
+  public void saveBoardTo(File fileToSave) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
+      writer.write("[Event \"Unnamed\"]");
+      writer.newLine();
+      writer.write("[Site \"?\"]");
+      writer.newLine();
+      writer.write("[Date \"" + java.time.LocalDate.now() + "\"]");
+      writer.newLine();
+      writer.write("[Round \"1\"]");
+      writer.newLine();
+      writer.write("[White \"" + player1.name + "\"]");
+      writer.newLine();
+      writer.write("[Black \"" + player2.name + "\"]");
+      writer.newLine();
+      writer.write("\n");
+
+      for (int i = 0; i < moves.size(); i++) {
+        writer.write(moves.get(i));
+      }
+      writer.write("\n");
+
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println("Error saving the board to file: " + e.getMessage());
+    }
   }
 }

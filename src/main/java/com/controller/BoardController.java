@@ -1,5 +1,7 @@
 package main.java.com.controller;
 
+import java.io.File;
+
 import main.java.com.game.Board;
 import main.java.com.game.Pawn;
 import main.java.com.game.Piece;
@@ -27,10 +29,10 @@ public class BoardController {
   }
 
   public void updateBoard() {
-      Pawn pawn = board.getPromotable() ;
-      if(pawn != null){
-        promotion(pawn);
-      }
+    Pawn pawn = board.getPromotable();
+    if (pawn != null) {
+      promotion(pawn);
+    }
 
     if (selectedPiece != null && selectedTilePos != null) {
       result = board.MovePieceTo(selectedPiece, selectedTilePos);
@@ -69,5 +71,9 @@ public class BoardController {
   public void promotion(Pawn pawn) {
     Type type = boardPanel.promptForPromotion();
     pawn.promoteTo(type, board);
+  }
+
+  public void saveBoardTo(File fileToSave) {
+    board.saveBoardTo(fileToSave);
   }
 }
