@@ -141,18 +141,20 @@ public class Board {
     }
 
     if (piece.move(pos, this)) {
-      if (turnColor == Color.WHITE) {
+      if (piece.getColor() == Color.WHITE) {
         StringBuilder pgnMove = new StringBuilder();
-        pgnMove.append(Math.floor((turn + 2) / 2) + ". ");
+        pgnMove.append((int) Math.floor((turn + 2) / 2) + ". ");
         pgnMove.append(piece.lastMove);
         moves.add(pgnMove.toString());
       }
 
       else {
-        StringBuilder pgnMove = new StringBuilder(moves.getLast());
+        String lastMove = moves.getLast();
+        StringBuilder pgnMove = new StringBuilder(lastMove); 
+        pgnMove.append(" "); 
+        pgnMove.append(piece.lastMove); 
+
         moves.removeLast();
-        pgnMove.append(" ");
-        pgnMove.append(piece.lastMove);
         moves.add(pgnMove.toString());
       }
 
