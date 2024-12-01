@@ -1,15 +1,12 @@
 package main.java.com.game;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 import main.java.com.game.Piece.Color;
@@ -22,6 +19,13 @@ public class Board {
   int turn;
   public List<String> moves;
 
+  /**
+   * Új Board objektumot hoz létre a megadott játékosnevekkel és tábla mérettel.
+   *
+   * @param player1Name az első játékos neve (a fehér bábukat kapja)
+   * @param player2Name a második játékos neve (a fekete bábukat kapja)
+   * @param size        a tábla mérete
+   */
   public Board(String player1Name, String player2Name, int size) {
     this.player1 = new Player(player1Name, Color.WHITE);
     this.player2 = new Player(player2Name, Color.BLACK);
@@ -31,11 +35,19 @@ public class Board {
     moves = new ArrayList<>();
   }
 
+  /**
+   * A tábla beállítása a játékosok bábujainak elhelyezésével.
+   */
   public void setUpBoard() {
     player1.setUpPieces(size);
     player2.setUpPieces(size);
   }
 
+  /**
+   * Visszaadja a tábla összes bábuját.
+   * 
+   * @return a tábla összes bábuját tartalmazó lista
+   */
   public List<Piece> getPieces() {
     List<Piece> pieces = new ArrayList<>();
     pieces.addAll(player1.getPieces());
@@ -43,34 +55,79 @@ public class Board {
     return pieces;
   }
 
+  /**
+   * Ellenőrzi, hogy a lépés a tábla határain belül van-e.
+   * 
+   * @param move a lépés koordinátái
+   * @return igaz, ha a lépés a tábla határain belül van, különben hamis
+   */
   public boolean isWithinBounds(Vec2 move) {
     return move.x >= 0 && move.x < size && move.y >= 0 && move.y < size;
   }
 
+  /**
+   * Ellenőrzi, hogy a lépés a tábla határain belül van-e.
+   * 
+   * @param move a lépés koordinátái
+   * @return igaz, ha a lépés a tábla határain belül van, különben hamis
+   */
   public List<Vec2> clipMovesToBoard(List<Vec2> moves) {
     return moves.stream().filter(m -> isWithinBounds(m)).collect(Collectors.toList());
   }
 
+  /**
+   * Ellenőrzi, hogy a megadott pozíció üres-e.
+   * 
+   * @param pos a pozíció
+   * @return igaz, ha az adott pozíció üres, különben hamis
+   */
   public Color getTurn() {
     return turn % 2 == 0 ? Color.WHITE : Color.BLACK;
   }
 
+  /**
+   * Visszaadja az aktuális játékost.
+   * 
+   * @return az aktuális játékos
+   */
   public Player getPlayer() {
     return getPlayer(getTurn());
   }
 
+  /**
+   * Visszaadja a következő játékost.
+   * 
+   * @return a következő játékos
+   */
   public Player getNextPlayer() {
     return getPlayer((turn + 1) % 2 == 0 ? Color.WHITE : Color.BLACK);
   }
 
+  /**
+   * Visszaadja a megadott színű játékost.
+   * 
+   * @param color a játékos színe
+   * @return a megadott színű játékos
+   */
   public Player getPlayer(Color color) {
     return color == Color.WHITE ? player1 : player2;
   }
 
-  public void changeTurn() {
+  /**
+   * Megváltoztatja az aktuális játékost a következőre.
+   */
+  private void changeTurn() {
     turn++;
   }
 
+  /**
+   * Ellenőrzi, hogy van-e bábu a megadott pozíción a megadott színnel.
+   * 
+   * @param pos   a pozíció
+   * @param color a bábu színe
+   * @return igaz, ha van bábu a megadott pozíción a megadott színnel, különben
+   *         hamis
+   */
   public boolean hasPieceAt(Vec2 pos, Color color) {
     for (Piece p : getPieces()) {
       if (pos.equals(p.getPos()) && color == p.getColor()) {
@@ -80,6 +137,12 @@ public class Board {
     return false;
   }
 
+  /**
+   * Ellenőrzi, hogy van-e bábu a megadott pozíción.
+   * 
+   * @param pos a pozíció
+   * @return igaz, ha van bábu a megadott pozíción, különben hamis
+   */
   public boolean hasPieceAt(Vec2 pos) {
     for (Piece p : getPieces()) {
       if (pos.equals(p.getPos())) {
@@ -89,6 +152,13 @@ public class Board {
     return false;
   }
 
+  /**
+   * Visszaadja a megadott pozíción és színnel lévő bábut.
+   * 
+   * @param pos   a pozíció
+   * @param color a bábu színe
+   * @return a megadott pozíción és színnel lévő bábu, vagy null ha nincs ilyen
+   */
   public Piece getPieceAt(Vec2 pos, Color color) {
     for (Piece p : getPieces()) {
       if (pos.equals(p.getPos()) && color == p.getColor()) {
@@ -98,18 +168,23 @@ public class Board {
     return null;
   }
 
-  public void removePiece(Piece p) {
-    if (p.getColor() == Color.WHITE)
-      player1.removePiece(p);
-    else
-      player2.removePiece(p);
-  }
-
-  public boolean isOnSameColoredTile(Piece p1, Piece p2) {
+  /**
+   * Ellenőrzi, hogy két bábu azonos színű mezőn áll-e.
+   * 
+   * @param p1 az első bábu
+   * @param p2 a második bábu
+   * @return igaz, ha a két bábu azonos színű mezőn áll, különben hamis
+   */
+  private boolean isOnSameColoredTile(Piece p1, Piece p2) {
     return (p1.pos.x + p1.pos.y % 2) == (p2.pos.x + p2.pos.y % 2);
   }
 
-  public boolean isDraw() {
+  /**
+   * Ellenőrzi, hogy patthelyzet van-e.
+   * 
+   * @return igaz, ha patthylezet van, különben hamis
+   */
+  private boolean isDraw() {
     if (player1.countType(null) == 1 && player2.countType(null) == 1)
       return true;
     if (player1.countType(null) == 1 && player2.countType(null) == 2 &&
@@ -134,8 +209,13 @@ public class Board {
     return false;
   }
 
+  /**
+   * Visszaadja a promotálható gyalogot.
+   * 
+   * @return a promotálható gyalog, vagy null ha nincs ilyen
+   */
   public Pawn getPromotable() {
-    return (Pawn) getPlayer().pieces.stream()
+    return (Pawn) getPlayer().getPieces().stream()
         .filter(p -> p instanceof Pawn)
         .map(p -> (Pawn) p)
         .filter(Pawn::isPromotable)
@@ -143,6 +223,14 @@ public class Board {
         .orElse(null);
   }
 
+  /**
+   * Áthelyezi a bábut a megadott pozícióra.
+   * 
+   * @param piece a bábu
+   * @param pos   a cél pozíció
+   * @return a játék állapota (pl. "Draw" vagy a győztes neve), vagy null ha nincs
+   *         különleges állapot
+   */
   public String MovePieceTo(Piece piece, Vec2 pos) {
     if (isDraw()) {
       return "Draw";
@@ -173,7 +261,7 @@ public class Board {
       }
 
       changeTurn();
-      if (getPlayer().isCheckMate(pos, this)) {
+      if (getPlayer().isCheckMate(this)) {
         changeTurn();
         return getNextPlayer().name;
       }
@@ -182,6 +270,12 @@ public class Board {
     return null;
   }
 
+  /**
+   * Elmenti a sakktábla állapotát a megadott fájlba.
+   * Hiba esetén hibaüzenetet ír a konzolra.
+   *
+   * @param fileToSave a fájl, amelybe a tábla állapota el lesz mentve
+   */
   public void saveBoardTo(File fileToSave) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
       writer.write("[Event \"Unnamed\"]");
@@ -209,6 +303,12 @@ public class Board {
     }
   }
 
+  /**
+   * Betölti a sakktábla állapotát a megadott fájlból.
+   * Hiba esetén hibaüzenetet ír a konzolra.
+   *
+   * @param fileToSave a fájl, amelyből a tábla állapota be lesz töltve
+   */
   public void loadBoardFrom(File fileToLoad) throws IOException {
     List<String> lines = Files.readAllLines(fileToLoad.toPath());
 
@@ -290,23 +390,27 @@ public class Board {
     }
   }
 
-  public static String[] splitString(String s) {
-    // Find the position of the last alphabetic character
+  /**
+   * Két részre bontja a megadott stringet az utolsó betű karakter alapján.
+   *
+   * @param s a string, amit fel kell bontani
+   * @return egy tömb, amely tartalmazza a két részt, vagy egy üres tömb, ha nincs
+   *         betű karakter
+   */
+  private static String[] splitString(String s) {
     int lastAlphabeticIndex = -1;
 
-    // Traverse the string to find the index of the last alphabetic character
     for (int i = 0; i < s.length(); i++) {
       if (Character.isLetter(s.charAt(i))) {
         lastAlphabeticIndex = i;
       }
     }
 
-    // If a last alphabetic character was found
     if (lastAlphabeticIndex != -1) {
-      String firstPart = s.substring(0, lastAlphabeticIndex); // Everything before the last alphabetic character
-      String secondPart = s.substring(lastAlphabeticIndex); // The last alphabetic character and everything after
+      String firstPart = s.substring(0, lastAlphabeticIndex);
+      String secondPart = s.substring(lastAlphabeticIndex);
 
-      return new String[] { firstPart, secondPart }; // Return the parts
+      return new String[] { firstPart, secondPart };
     }
     return new String[2];
   }

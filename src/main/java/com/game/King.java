@@ -4,8 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 
+/**
+ * A királyt reprezentáló osztály.
+ */
 public class King extends Piece {
 
+  /**
+   * A King osztály konstruktora.
+   *
+   * @param color A király színe.
+   * @param pos   A király pozíciója.
+   */
   public King(Color color, Vec2 pos) {
     super(color, pos);
     if (color == Color.WHITE)
@@ -14,6 +23,13 @@ public class King extends Piece {
       this.image = new ImageIcon("src/main/java/com/images/Chess_kdt45.png");
   }
 
+  /**
+   * A Királyt a newpos pozícióra mozgatja, ha az lehetséges.
+   * 
+   * @param newPos az új pozíció
+   * @param board  a játéktábla
+   * @return igaz, ha a lépés sikeres, egyébként hamis
+   */
   @Override
   public boolean move(Vec2 newPos, Board board) {
     if (newPos.equals(kingsideCastle(board))) {
@@ -51,6 +67,13 @@ public class King extends Piece {
     return super.move(newPos, board);
   }
 
+  /**
+   * Ellenőrzi, hogy a király tud-e sáncolni a királyszárnyon, és ha igen,
+   * visszaadja az új pozícióját.
+   *
+   * @param board A tábla.
+   * @return A király új pozíciója, ha a sáncolás lehetséges, különben null.
+   */
   public Vec2 kingsideCastle(Board board) {
     Piece rook = board.getPieceAt(new Vec2(pos.x + 3, pos.y), color);
     if (rook == null || rook.getType() != Type.ROOK)
@@ -69,6 +92,13 @@ public class King extends Piece {
     return newPos;
   }
 
+  /**
+   * Ellenőrzi, hogy a király tud-e sáncolni a vezérszárnyon, és ha igen,
+   * visszaadja az új pozícióját.
+   *
+   * @param board A tábla.
+   * @return A király új pozíciója, ha a sáncolás lehetséges, különben null.
+   */
   public Vec2 queensideCastle(Board board) {
     Piece rook = board.getPieceAt(new Vec2(pos.x - 4, pos.y), color);
     if (rook == null || rook.getType() != Type.ROOK)
@@ -88,6 +118,12 @@ public class King extends Piece {
     return newPos;
   }
 
+  /**
+   * A király lehetséges lépéseit adja vissza a megadott táblán.
+   *
+   * @param board A tábla.
+   * @return A király lehetséges lépéseinek listája.
+   */
   @Override
   public List<Vec2> getMoves(Board board) {
     List<Vec2> moves = new ArrayList<>();
@@ -105,51 +141,59 @@ public class King extends Piece {
     return moves;
   }
 
-  public Rook getKingsideRook(Board board) {
+  /**
+   * Visszaadja a király oldalán lévő bástyát.
+   *
+   * @param board A játék tábla.
+   * @return A király oldalán lévő bástya.
+   */
+  private Rook getKingsideRook(Board board) {
     return (Rook) board.getPlayer().getPieceAt(new Vec2(pos.x + 3, pos.y), color);
   }
 
-  public Rook getQueensideRook(Board board) {
+  /**
+   * Visszaadja a vezér oldalán lévő bástyát.
+   *
+   * @param board A játék tábla.
+   * @return A vezér oldalán lévő bástya.
+   */
+  private Rook getQueensideRook(Board board) {
     return (Rook) board.getPlayer().getPieceAt(new Vec2(pos.x - 4, pos.y), color);
   }
 
-  public Vec2 getKingsideRookPos() {
+  /**
+   * Visszaadja a királyoldali bástya pozícióját.
+   *
+   * @return A királyoldali bástya pozíciója.
+   */
+  private Vec2 getKingsideRookPos() {
     return new Vec2(pos.x - 1, pos.y);
   }
 
-  public Vec2 getQueensideRookPos() {
+  /**
+   * Visszaadja a vezér oldali bástya pozícióját.
+   *
+   * @return A vezér oldali bástya pozíciója.
+   */
+  private Vec2 getQueensideRookPos() {
     return new Vec2(pos.x + 1, pos.y);
   }
 
-  public List<Vec2> getMovesNotChecked(Vec2 pos, int turn, Board board) {
-    List<Vec2> movesNotChecked = new ArrayList<Vec2>();
-    for (Vec2 move : getMoves(board)) {
-      Piece secondary = null;
-      Vec2 sPos = null;
-
-      if (move.equals(kingsideCastle(board))) {
-        secondary = getKingsideRook(board);
-        sPos = getKingsideRookPos();
-      }
-
-      else if (move.equals(queensideCastle(board))) {
-        secondary = getQueensideRook(board);
-        sPos = getQueensideRookPos();
-      }
-
-      if (!board.getPlayer().isMoveChecked(board, this, move, secondary,
-          sPos)) {
-        movesNotChecked.add(move);
-      }
-    }
-    return movesNotChecked;
-  }
-
+  /**
+   * Visszaadja a király típusát.
+   *
+   * @return a király típusát, ami {@link Type#KING}.
+   */
   @Override
   public Type getType() {
     return Type.KING;
   }
 
+  /**
+   * Létrehoz egy új King objektumot az aktuális King példány alapján.
+   *
+   * @return egy új King objektum, amely az aktuális példány másolata
+   */
   @Override
   public Piece clone() {
     King k = new King(color, pos);
@@ -157,6 +201,11 @@ public class King extends Piece {
     return k;
   }
 
+  /**
+   * Visszaadja a király karakterét.
+   *
+   * @return 'K' karakter.
+   */
   @Override
   public char getChar() {
     return 'K';

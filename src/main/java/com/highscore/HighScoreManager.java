@@ -16,16 +16,27 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonWriter;
 
+/**
+ * Osztály a topplista kezelésére.
+ */
 public class HighScoreManager {
   private String FILE_PATH;
   private Map<String, Float> highScores;
 
+  /**
+   * HighScoreManager konstruktora.
+   *
+   * @param FILE_PATH A fájl elérési útvonala.
+   */
   public HighScoreManager(String FILE_PATH) {
     this.FILE_PATH = FILE_PATH;
     highScores = new HashMap<>();
     loadHighScores();
   }
 
+  /**
+   * Betölti a topplista adatait a megadott fájlból.
+   */
   private void loadHighScores() {
     File file = new File(FILE_PATH);
     if (!file.exists()) {
@@ -47,17 +58,26 @@ public class HighScoreManager {
   private void createNewFile() {
     try {
       Files.write(Paths.get(FILE_PATH),
-                  "[]".getBytes()); // Create an empty JSON array
+          "[]".getBytes()); // Create an empty JSON array
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
+  /**
+   * Növeli a megadott játékos pontszámát a megadott értékkel.
+   *
+   * @param name  A játékos neve.
+   * @param score A növelendő pontszám.
+   */
   public void incrementHighScore(String name, float score) {
-    highScores.put(name, highScores.getOrDefault(name, (float)0) + score);
+    highScores.put(name, highScores.getOrDefault(name, (float) 0) + score);
     saveHighScores();
   }
 
+  /**
+   * Elmenti a toplista adatait a megadott fájlba.
+   */
   private void saveHighScores() {
     JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
     for (Map.Entry<String, Float> entry : highScores.entrySet()) {
@@ -67,13 +87,19 @@ public class HighScoreManager {
       arrayBuilder.add(objectBuilder.build());
     }
 
-    try (JsonWriter writer =
-             Json.createWriter(new FileOutputStream(FILE_PATH))) {
+    try (JsonWriter writer = Json.createWriter(new FileOutputStream(FILE_PATH))) {
       writer.writeArray(arrayBuilder.build());
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  public Map<String, Float> getHighScores() { return highScores; }
+  /**
+   * Visszaadja a toplista adatait.
+   *
+   * @return A toplista adatai.
+   */
+  public Map<String, Float> getHighScores() {
+    return highScores;
+  }
 }

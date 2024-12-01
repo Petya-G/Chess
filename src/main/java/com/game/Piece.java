@@ -6,6 +6,9 @@ import java.util.Objects;
 
 import javax.swing.ImageIcon;
 
+/**
+ * A sakkfigurákat reprezentáló absztrakt osztály.
+ */
 public abstract class Piece {
   Color color;
   Vec2 pos;
@@ -13,6 +16,12 @@ public abstract class Piece {
   boolean firstMove;
   String lastMove;
 
+  /**
+   * Létrehoz egy új Piece objektumot a megadott színnel és pozícióval.
+   *
+   * @param color A bábu színe
+   * @param pos   A bábu pozíciója
+   */
   public Piece(Color color, Vec2 pos) {
     this.color = color;
     this.pos = pos;
@@ -20,6 +29,12 @@ public abstract class Piece {
     this.lastMove = "";
   }
 
+  /**
+   * Két Piece objektum egyenlőségét vizsgálja.
+   *
+   * @param obj Az összehasonlítandó objektum.
+   * @return true, ha az objektumok egyenlőek, különben false.
+   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -31,13 +46,29 @@ public abstract class Piece {
     return this.color == piece.color && this.pos.equals(piece.pos);
   }
 
+  /**
+   * Visszaadja a bábu hash kódját a szín és pozíció alapján.
+   *
+   * @return a bábu hash kódja
+   */
   @Override
   public int hashCode() {
     return Objects.hash(color, pos);
   }
 
+  /**
+   * A bábú lehetséges lépéseit adja vissza a megadott táblán.
+   *
+   * @param board A tábla.
+   * @return A lehetséges lépések listája.
+   */
   public abstract char getChar();
 
+  /**
+   * Visszaadja a bábu karakterét és pozícióját algebrai formában.
+   * 
+   * @return A bábu karaktere és pozíciója.
+   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -45,8 +76,21 @@ public abstract class Piece {
     return sb.toString();
   }
 
+  /**
+   * Visszaadja a bábuval léphető lépéseket.
+   * 
+   * @return A bábval lépehtő lépések listája.
+   */
   public abstract List<Vec2> getMoves(Board board);
 
+  /**
+   * Visszaadja a lépést PGN formátumban.
+   * 
+   * @param newPos   pozició ahova a bábu lép
+   * @param attacked megtámadott bábu
+   * @param board    a játéktábla
+   * @return a lépés PGN formátumban
+   */
   private String formatMove(Vec2 newPos, Piece attacked, Board board) {
     StringBuilder pgnMove = new StringBuilder();
 
@@ -75,12 +119,19 @@ public abstract class Piece {
       pgnMove.append('+');
     }
 
-    else if (board.getNextPlayer().isCheckMate(newPos, board))
+    else if (board.getNextPlayer().isCheckMate(board))
       pgnMove.append('#');
     return pgnMove.toString();
   }
 
-  public boolean hasSameMoveOnRow(Vec2 newPos, Board board) {
+  /**
+   * Ellenőrzi, hogy a bábu ugyanarra a sorra tud-e lépni, mint egy másik bábu.
+   * 
+   * @param newPos az új pozíció
+   * @param board  a játéktábla
+   * @return igaz, ha a bábu ugyanarra a sorra tud lépni, egyébként hamis
+   */
+  private boolean hasSameMoveOnRow(Vec2 newPos, Board board) {
     for (Piece p : board.getPlayer().getPieces()) {
       for (Vec2 m : p.getMoves(board)) {
         if (!p.equals(this) && p.pos.y == this.pos.y && newPos.equals(m))
@@ -90,7 +141,15 @@ public abstract class Piece {
     return false;
   }
 
-  public boolean hasSameMoveOnColumn(Vec2 newPos, Board board) {
+  /**
+   * Ellenőrzi, hogy a bábu ugyanarra az oszlopra tud-e lépni, mint egy másik
+   * bábu.
+   * 
+   * @param newPos az új pozíció
+   * @param board  a játéktábla
+   * @return igaz, ha a bábu ugyanarra a oszlopra tud lépni, egyébként hamis
+   */
+  private boolean hasSameMoveOnColumn(Vec2 newPos, Board board) {
     for (Piece p : board.getPlayer().getPieces()) {
       for (Vec2 m : p.getMoves(board)) {
         if (!p.equals(this) && p.pos.x == this.pos.x && newPos.equals(m))
@@ -100,6 +159,13 @@ public abstract class Piece {
     return false;
   }
 
+  /**
+   * Frissíti az utolsó lépést.
+   * 
+   * @param newPos   az új pozíció
+   * @param attacked megtámadott bábu
+   * @param board    a játéktábla
+   */
   protected void updateLastMove(Vec2 newPos, Piece attacked, Board board) {
     String moveString = formatMove(newPos, attacked, board);
     if (moveString != null) {
@@ -107,6 +173,13 @@ public abstract class Piece {
     }
   }
 
+  /**
+   * A bábút a newpos pozícióra mozgatja, ha az lehetséges.
+   * 
+   * @param newPos az új pozíció
+   * @param board  a játéktábla
+   * @return igaz, ha a lépés sikeres, egyébként hamis
+   */
   public boolean move(Vec2 newPos, Board board) {
     Piece attacked = board.getPieceAt(newPos, getOppositeColor());
     if (getMoves(board).contains(newPos) &&
@@ -119,15 +192,26 @@ public abstract class Piece {
     return false;
   }
 
+  /**
+   * Visszaadja a bábu típusát.
+   * 
+   * @return a bábu típusa
+   */
   public abstract Type getType();
 
   public abstract Piece clone();
 
+  /**
+   * A bábu színét reprezentáló enum.
+   */
   public enum Color {
     WHITE,
     BLACK;
   }
 
+  /**
+   * A bábu típusát reprezentáló enum.
+   */
   public enum Type {
     PAWN,
     ROOK,
@@ -136,6 +220,12 @@ public abstract class Piece {
     QUEEN,
     KING;
 
+    /**
+     * Visszaadja a bábu típusát a megadott karakter alapján.
+     * 
+     * @param pieceChar a bábu karaktere
+     * @return a bábu típusa
+     */
     public static Type getType(char pieceChar) {
       switch (pieceChar) {
         case 'Q':
@@ -154,7 +244,10 @@ public abstract class Piece {
     }
   }
 
-  public enum Direction {
+  /**
+   * Az irányokat reprezentáló enum.
+   */
+  private enum Direction {
     UP(0, -1),
     DOWN(0, 1),
     LEFT(-1, 0),
@@ -167,33 +260,71 @@ public abstract class Piece {
     public final int xOffset;
     public final int yOffset;
 
+    /**
+     * Létrehoz egy új irányt a megadott x és y eltolással.
+     * 
+     * @param xOffset
+     * @param yOffset
+     */
     Direction(int xOffset, int yOffset) {
       this.xOffset = xOffset;
       this.yOffset = yOffset;
     }
   }
 
+  /**
+   * Visszaadja a bábu pozícióját.
+   * 
+   * @return a bábu pozíciója
+   */
   public Vec2 getPos() {
     return pos;
   }
 
+  /**
+   * Beállítja a bábu pozícióját.
+   * 
+   * @param pos a bábu új pozíciója
+   */
   public void setPos(Vec2 pos) {
     this.pos = pos;
   }
 
+  /**
+   * Visszaadja a bábu általl használt ikont.
+   * 
+   * @return a bábu ikonja
+   */
   public ImageIcon getImage() {
     return image;
   }
 
+  /**
+   * Visszaadja a bábu színét.
+   * 
+   * @return a bábu színe
+   */
   public Color getColor() {
     return color;
   }
 
+  /**
+   * Visszaadja a bábu ellenkező színét.
+   * 
+   * @return a bábu ellenkező színe
+   */
   public Color getOppositeColor() {
     return (color == Color.WHITE) ? Color.BLACK : Color.WHITE;
   }
 
-  public List<Vec2> addMovesInDirection(Direction direction, Board board) {
+  /**
+   * Hozzáadja a lehetséges lépéseket egy adott irányban a táblán.
+   *
+   * @param direction Az irány, amelyben a lépéseket hozzá kell adni.
+   * @param board     A tábla, amelyen a lépéseket ellenőrizni kell.
+   * @return A lehetséges lépések listája az adott irányban.
+   */
+  private List<Vec2> addMovesInDirection(Direction direction, Board board) {
     List<Vec2> moves = new ArrayList<>();
     int x = pos.x;
     int y = pos.y;
@@ -217,7 +348,13 @@ public abstract class Piece {
     return moves;
   }
 
-  public List<Vec2> getOrthogonalMoves(Board board) {
+  /**
+   * Visszaadja a bábu által léphető horizontális és vertikális lépéseket.
+   * 
+   * @param board a játéktábla
+   * @return a bábu által léphető horizontális és vertikális lépések listája
+   */
+  protected List<Vec2> getOrthogonalMoves(Board board) {
     List<Vec2> moves = new ArrayList<>();
     moves.addAll(addMovesInDirection(Direction.LEFT, board));
     moves.addAll(addMovesInDirection(Direction.RIGHT, board));
@@ -226,7 +363,13 @@ public abstract class Piece {
     return moves;
   }
 
-  public List<Vec2> getDiagonalMoves(Board board) {
+  /**
+   * Visszaadja a bábu által léphető diagonális lépéseket.
+   * 
+   * @param board a játéktábla
+   * @return a bábu által léphető diagonális lépések listája
+   */
+  protected List<Vec2> getDiagonalMoves(Board board) {
     List<Vec2> moves = new ArrayList<>();
     moves = board.clipMovesToBoard(moves);
     moves.addAll(addMovesInDirection(Direction.UP_LEFT, board));
@@ -236,7 +379,13 @@ public abstract class Piece {
     return moves;
   }
 
-  public List<Vec2> limitMoves(List<Vec2> moves) {
+  /**
+   * Korlátozza a megadott lépések listáját a táblán szereplő mezőkre.
+   *
+   * @param moves A lépések listája, amelyeket korlátozni kell.
+   * @return A táblán szereplőkre korlátozott lépések listája.
+   */
+  protected List<Vec2> limitMoves(List<Vec2> moves) {
     List<Vec2> lMoves = new ArrayList<>();
     for (Vec2 v : moves) {
       if (Math.abs(pos.x - v.x) <= 1 && Math.abs(pos.y - v.y) <= 1) {

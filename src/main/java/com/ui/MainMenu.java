@@ -3,8 +3,6 @@ package main.java.com.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JButton;
@@ -14,9 +12,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * A főmenüt megjelenítő panel.
+ */
 public class MainMenu extends JPanel {
   private String[] playerNames;
 
+  /**
+   * A menü gombot reprezentáló osztály.
+   */
   class MenuButton extends JButton {
     public MenuButton(String name, Window window) {
       super(name);
@@ -27,6 +31,11 @@ public class MainMenu extends JPanel {
     }
   }
 
+  /**
+   * A főmenü panel konstruktora.
+   * 
+   * @param window A főablak
+   */
   public MainMenu(Window window) {
     GridLayout gridLayout = new GridLayout(3, 3, 20, 20);
     setLayout(gridLayout);
@@ -68,10 +77,20 @@ public class MainMenu extends JPanel {
     add(exitButton);
   }
 
+  /**
+   * Visszaadja a játékosok neveit.
+   * 
+   * @return A játékosok nevei
+   */
   public String[] getPlayerNames() {
     return playerNames;
   }
 
+  /**
+   * A játékosok neveinek bekérését megvalósító metódus.
+   * 
+   * @return A játékosok nevei
+   */
   private String[] promptForPlayerNames() {
     JTextField player1Field = new JTextField();
     JTextField player2Field = new JTextField();

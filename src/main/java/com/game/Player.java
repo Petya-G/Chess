@@ -7,17 +7,31 @@ import java.util.stream.Collectors;
 import main.java.com.game.Piece.Color;
 import main.java.com.game.Piece.Type;
 
+/**
+ * Egy játékost reprezentáló osztály.
+ */
 public class Player {
   public String name;
-  Color color;
-  List<Piece> pieces;
+  private Color color;
+  private List<Piece> pieces;
 
+  /**
+   * A Player osztály konstruktora.
+   *
+   * @param name  A játékos neve.
+   * @param color A játékos színe.
+   */
   public Player(String name, Color color) {
     this.color = color;
     this.name = name;
     this.pieces = new ArrayList<>();
   }
 
+  /**
+   * Beállítja a játékos bábuit a megadott méret (és színe) alapján.
+   *
+   * @param size A bábuk száma.
+   */
   public void setUpPieces(int size) {
     if (color == Color.BLACK) {
       for (int i = 0; i < size; i++) {
@@ -47,22 +61,49 @@ public class Player {
     }
   }
 
+  /**
+   * Visszaadja a játékos bábuit.
+   *
+   * @return A játékos bábui.
+   */
   public List<Piece> getPieces() {
     return pieces;
   }
 
+  /**
+   * Visszaadja a játékos színét.
+   *
+   * @return A játékos színe.
+   */
   public Color getColor() {
     return color;
   }
 
+  /**
+   * Eltávolít egy bábut a játékos bábui közül.
+   *
+   * @param piece A bábu, amelyet el kell távolítani.
+   */
   public void removePiece(Piece piece) {
     pieces.remove(piece);
   }
 
+  /**
+   * Hozzáad egy bábut a játékos bábuihoz.
+   *
+   * @param piece A bábu, amelyet hozzá kell adni.
+   */
   public void addPiece(Piece piece) {
     pieces.add(piece);
   }
 
+  /**
+   * Visszaad egy bábut a megadott pozícióban és színben.
+   * 
+   * @param pos   a bábu pozíciója
+   * @param color a bábu színe
+   * @return a bábu a megadott pozícióban és színben, ha létezik, egyébként null
+   */
   public Piece getPieceAt(Vec2 pos, Color color) {
     return pieces.stream()
         .filter(p -> p.pos.equals(pos) && p.color == color)
@@ -70,6 +111,12 @@ public class Player {
         .orElse(null);
   }
 
+  /**
+   * Visszaad egy bábut a megadott típus alapján.
+   * 
+   * @param type a bábu típusa
+   * @return a bábu a megadott típus alapján, ha létezik, egyébként null
+   */
   public Piece getPiece(Piece.Type type) {
     return pieces.stream()
         .filter(p -> p.getType() == type)
@@ -77,12 +124,25 @@ public class Player {
         .orElse(null);
   }
 
+  /**
+   * Megszámolja a bábukat a megadott típus alapján.
+   * 
+   * @param type a bábu típusa
+   * @return a bábuk száma a megadott típus alapján
+   */
   public int countType(Piece.Type type) {
     if (type == null)
       return pieces.size();
     return (int) pieces.stream().filter(p -> p.getType() == type).count();
   }
 
+  /**
+   * Megadja, hogy a játékos királya sakkban van-e.
+   * 
+   * @param board a játéktábla
+   * @param turn  a játék lépésszáma
+   * @return igaz, ha a játékos királya sakkban van, egyébként hamis
+   */
   public boolean isChecked(Board board, int turn) {
     King king = (King) getPiece(Type.KING);
     List<Vec2> moves = new ArrayList<>();
@@ -105,6 +165,18 @@ public class Player {
     return false;
   }
 
+  /**
+   * Megadja, hogy a játékos királya sakkban van-e a megadott lépés után.
+   * 
+   * @param board     a játéktábla
+   * @param primary   az első bábu
+   * @param pPos      az első bábu új pozíciója
+   * @param secondary a második bábu
+   * @param sPos      a második bábu új pozíciója (ha ennek nem null az értéket,
+   *                  akkor a második bábút ide mozgatjuk)
+   * @return igaz, ha a játékos királya sakkban van a megadott lépés után,
+   *         egyébként hamis
+   */
   public boolean isMoveChecked(Board board, Piece primary, Vec2 pPos, Piece secondary,
       Vec2 sPos) {
     Piece oPrimary = primary;
@@ -146,28 +218,42 @@ public class Player {
     return checked;
   }
 
-  public List<Vec2> getMoves(Board board) {
+  /**
+   * Visszadja a játékos összes lehetséges lépését.
+   * 
+   * @param board a játéktábla
+   * @return a játékos összes lehetséges lépése
+   */
+  private List<Vec2> getMoves(Board board) {
     return getPieces().stream().flatMap(piece -> piece.getMoves(board).stream())
         .collect(Collectors.toList());
   }
 
-  public boolean isCheckMate(Vec2 pos, Board board) {
+  /**
+   * Megadja, hogy a játékos sakkmattot kapott-e.
+   * 
+   * @param board a játéktábla
+   * @return igaz, ha a játékos sakkmattot kapott, egyébként hamis
+   */
+  public boolean isCheckMate(Board board) {
     return board.getNextPlayer().getMoves(board).size() == 0 && board.getNextPlayer().isChecked(board, board.turn);
   }
 
+  /**
+   * Azon bábukat adja vissza, amelyekkel a megadott lépés lehetséges.
+   * 
+   * @param type  bábuk típusa
+   * @param move  lépés helye
+   * @param board játéktábla
+   * @return azon bábuk listája, amelyekkel a lépés lehetséges
+   */
   public List<Piece> getPiecesThatHaveMove(Type type, Vec2 move, Board board) {
-    // return pieces.stream().filter(p -> p.getType() == type &&
-    // p.getMoves(board).contains(move)).toList();
-
     List<Piece> filteredPieces = new ArrayList<>();
     for (Piece p : getPieces()) {
       if (p.getType() == type && p.getMoves(board).contains(move)) {
         filteredPieces.add(p);
       }
     }
-
-    // Log the result
-    System.out.println("Filtered pieces: " + filteredPieces);
     return filteredPieces;
   }
 }

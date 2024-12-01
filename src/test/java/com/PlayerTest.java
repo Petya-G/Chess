@@ -9,11 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import main.java.com.game.Board;
-import main.java.com.game.Pawn;
 import main.java.com.game.Piece.Color;
 import main.java.com.game.Player;
-import main.java.com.game.Queen;
-import main.java.com.game.Vec2;
 import main.java.com.game.Piece;
 
 public class PlayerTest {

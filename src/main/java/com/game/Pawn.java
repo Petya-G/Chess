@@ -4,10 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 
+/**
+ * A gyalogot reprezentáló osztály.
+ */
 public class Pawn extends Piece {
-  int moved2;
-  int sign;
+  private int moved2;
+  private int sign;
 
+  /**
+   * A Pawn osztály konstruktora.
+   *
+   * @param color A gyalog színe.
+   * @param pos   A gyalog pozíciója.
+   */
   public Pawn(Color color, Vec2 pos) {
     super(color, pos);
     moved2 = -1;
@@ -18,11 +27,21 @@ public class Pawn extends Piece {
     sign = (color == Color.BLACK) ? 1 : -1;
   }
 
+  /**
+   * Visszaadja a gyalog típusát.
+   *
+   * @return a gyalog típusát, ami {@link Type#PAWN}.
+   */
   @Override
   public Type getType() {
     return Type.PAWN;
   }
 
+  /**
+   * Létrehoz egy új Pawn objektumot az aktuális Pawn példány alapján.
+   *
+   * @return egy új Pawn objektum, amely az aktuális példány másolata
+   */
   @Override
   public Pawn clone() {
     Pawn p = new Pawn(color, pos);
@@ -31,6 +50,13 @@ public class Pawn extends Piece {
     return p;
   }
 
+  /**
+   * A gyalogot a newpos pozícióra mozgatja, ha az lehetséges.
+   * 
+   * @param newPos az új pozíció
+   * @param board  a játéktábla
+   * @return igaz, ha a lépés sikeres, egyébként hamis
+   */
   @Override
   public boolean move(Vec2 newPos, Board board) {
     boolean result = false;
@@ -78,7 +104,13 @@ public class Pawn extends Piece {
     return result;
   }
 
-  public Vec2 moveTwo(Board board) {
+  /**
+   * A gyalogot kettővel előre léptetéséhez tartozó lépés.
+   * 
+   * @param board a játéktábla
+   * @return a gyalog kettővel előre lépésének pozíciója
+   */
+  private Vec2 moveTwo(Board board) {
     Vec2 move1 = new Vec2(pos.x, pos.y + 1 * sign);
     Vec2 move2 = new Vec2(pos.x, pos.y + 2 * sign);
 
@@ -87,7 +119,13 @@ public class Pawn extends Piece {
     return null;
   }
 
-  public Vec2 moveOne(Board board) {
+  /**
+   * A gyalogot egyel előre léptetéséhez tartozó lépés.
+   * 
+   * @param board a játéktábla
+   * @return a gyalog egyel előre lépésének pozíciója
+   */
+  private Vec2 moveOne(Board board) {
     Vec2 move1 = new Vec2(pos.x, pos.y + 1 * sign);
 
     if (!board.hasPieceAt(move1))
@@ -95,6 +133,11 @@ public class Pawn extends Piece {
     return null;
   }
 
+  /**
+   * Visszaadja a gyaloggal léphető lépéseket.
+   * 
+   * @return A gyaloggal léphető lépések listája.
+   */
   @Override
   public List<Vec2> getMoves(Board board) {
     List<Vec2> moves = new ArrayList<>();
@@ -125,7 +168,13 @@ public class Pawn extends Piece {
     return moves;
   }
 
-  public Vec2 enpassantRight(Board board) {
+  /**
+   * Visszaadja a gyalog en passant balra lépését.
+   * 
+   * @param board a játéktábla
+   * @return a gyalog en passant balra lépésének pozíciója
+   */
+  private Vec2 enpassantRight(Board board) {
     Vec2 diagonalRight = new Vec2(pos.x + 1, pos.y + 1 * sign);
     Piece p = board.getPieceAt(new Vec2(pos.x + 1, pos.y), getOppositeColor());
     if (p != null) {
@@ -139,7 +188,13 @@ public class Pawn extends Piece {
     return null;
   }
 
-  public Vec2 enpassantLeft(Board board) {
+  /**
+   * Visszaadja a gyalog en passant jobbra lépését.
+   * 
+   * @param board a játéktábla
+   * @return a gyalog en passant jobbra lépésének pozíciója
+   */
+  private Vec2 enpassantLeft(Board board) {
     Vec2 diagonalLeft = new Vec2(pos.x - 1, pos.y + 1 * sign);
     Piece p = board.getPieceAt(new Vec2(pos.x - 1, pos.y), getOppositeColor());
     if (p != null) {
@@ -153,10 +208,21 @@ public class Pawn extends Piece {
     return null;
   }
 
+  /**
+   * Megadja, hogy a gyalogot lehet-e promótálni.
+   * 
+   * @return igaz, ha a gyalogot lehet promótálni, egyébként hamis
+   */
   public boolean isPromotable() {
     return (color == Color.WHITE && pos.y == 7) || (color == Color.WHITE && pos.y == 0);
   }
 
+  /**
+   * A gyalogot promoválja a megadott bábura.
+   * 
+   * @param type  a bábu típusa, amire a gyalogot promoválni kell
+   * @param board a játéktábla
+   */
   public void promoteTo(Type type, Board board) {
     Piece newPiece = null;
 
@@ -181,6 +247,11 @@ public class Pawn extends Piece {
     board.getPlayer().addPiece(newPiece);
   }
 
+  /**
+   * Visszaadja a gyalog karakterét.
+   *
+   * @return 'P' karakter.
+   */
   @Override
   public char getChar() {
     return ' ';

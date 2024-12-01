@@ -26,12 +26,23 @@ import main.java.com.controller.BoardController;
 import main.java.com.game.Piece.Type;
 import main.java.com.game.Vec2;
 
+/**
+ * Játéktábla megjelenítéséért felelős osztály.
+ */
 public class BoardPanel extends JPanel {
 
+  /**
+   * Egy mezőt reprezentáló gomb.
+   */
   class Tile extends JButton {
     private JLabel rowLabel;
     private JLabel columnLabel;
 
+    /**
+     * Tile konstuktora.
+     * 
+     * @param image A mezőhöz tartozó kép.
+     */
     public Tile(ImageIcon image) {
 
       super(image);
@@ -60,6 +71,13 @@ public class BoardPanel extends JPanel {
       setOpaque(true);
     }
 
+    /**
+     * Beállítja a mező háttérszínét, és a mezőhöz tartozó sor és oszlop számot (ha
+     * szükséges).
+     * 
+     * @param i Az oszlop indexe.
+     * @param j A sor indexe.
+     */
     public void setTile(int i, int j) {
       setBackground((i + j) % 2 == 0 ? window.tileYellow : Window.tileGreen);
 
@@ -84,13 +102,22 @@ public class BoardPanel extends JPanel {
     }
   }
 
+  /**
+   * Játékos nevét megjelenítő címke.
+   */
   class PlayerNameLabel extends JLabel {
     public PlayerNameLabel(String name) {
       super(name, JLabel.LEFT);
     }
   }
 
+  /**
+   * A játék irányításáért felelős panel.
+   */
   class ControlPanel extends JPanel {
+    /**
+     * A játék irányításáért felelős gomb.
+     */
     class ControlButton extends JButton {
       public ControlButton(String text) {
         super(text);
@@ -102,6 +129,9 @@ public class BoardPanel extends JPanel {
     ControlButton saveButton, resignButton, drawButton, exitButton;
     MovesPanel movesPanel;
 
+    /**
+     * ControlPanel konstruktora.
+     */
     public ControlPanel() {
 
       setLayout(new BorderLayout());
@@ -159,10 +189,16 @@ public class BoardPanel extends JPanel {
     }
   }
 
+  /**
+   * A lépések megjelenítéséért felelős panel.
+   */
   class MovesPanel extends JPanel {
     private JTable movesTable;
     private DefaultTableModel movesTableModel;
 
+    /**
+     * MovesPanel konstruktora.
+     */
     public MovesPanel() {
       setLayout(new BorderLayout());
 
@@ -180,6 +216,11 @@ public class BoardPanel extends JPanel {
       add(scrollPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Frissíti a lépések listáját.
+     * 
+     * @param moves A lépések listája.
+     */
     public void updateMoves(List<String> moves) {
       movesTableModel.setRowCount(0);
       for (String move : moves) {
@@ -197,6 +238,11 @@ public class BoardPanel extends JPanel {
   JPanel gridPanel;
   ControlPanel controlPanel;
 
+  /**
+   * BoardPanel konstruktora.
+   * 
+   * @param window A főablak.
+   */
   public BoardPanel(Window window) {
     this.window = window;
     setLayout(new BorderLayout());
@@ -240,14 +286,23 @@ public class BoardPanel extends JPanel {
     add(splitPane, BorderLayout.CENTER);
   }
 
+  /**
+   * Inicializálja a játékot.
+   */
   public void init() {
     tiles[4][4].doClick();
   }
 
+  /**
+   * Frissíti a panelt
+   */
   public void updateMovesPanel() {
     controlPanel.movesPanel.updateMoves(boardCtrl.board.moves);
   }
 
+  /**
+   * Törli a mezőkről a képeket.
+   */
   public void clearImages() {
     for (int i = 0; i < size; i++) {
       for (int j = 0; j < size; j++) {
@@ -256,10 +311,22 @@ public class BoardPanel extends JPanel {
     }
   }
 
+  /**
+   * Képet ad hozzá a koordináták általl meghatározott mezőhöz.
+   * 
+   * @param image A kép.
+   * @param x     x koordináta
+   * @param y     y koordináta
+   */
   public void addImageTo(ImageIcon image, int x, int y) {
     tiles[x][y].setIcon(image);
   }
 
+  /**
+   * Megjeleníti az eredménypanelt
+   * 
+   * @param result Az eredmény amivel véget ért a játék
+   */
   public void showResult(String result) {
     JPanel panel = new JPanel();
     String message = "Draw".equals(result) ? result + "." : result + " won.";
@@ -280,6 +347,12 @@ public class BoardPanel extends JPanel {
     window.showPanel("HighScores");
   }
 
+  /**
+   * Megjeleníti a promóciós panelt ahol kiválaszthatja a típust amire
+   * promoválnánk
+   * 
+   * @return A kiválasztott típus
+   */
   public static Type promptForPromotion() {
     String[] options = { "Queen", "Rook", "Bishop", "Knight" };
     int choice = JOptionPane.showOptionDialog(

@@ -1,10 +1,6 @@
 package test.java.com;
 
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

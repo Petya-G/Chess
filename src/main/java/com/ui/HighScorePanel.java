@@ -6,15 +6,24 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import main.java.com.highscore.HighScoreManager;
 
+/**
+ * Toplista megjelnítéséért felelős panel.
+ */
 public class HighScorePanel extends JPanel {
   public HighScoreManager highScoreManager;
 
+  /**
+   * HighScorePanel konstruktora.
+   */
   public HighScorePanel() {
     this.highScoreManager = new HighScoreManager("highscores.json");
     setLayout(new BorderLayout());
     updateDisplay();
   }
 
+  /**
+   * Frissíti a toplista panelt
+   */
   public void updateDisplay() {
     removeAll();
     Map<String, Float> scores = highScoreManager.getHighScores();

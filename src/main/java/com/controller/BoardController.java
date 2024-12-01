@@ -18,17 +18,32 @@ public class BoardController {
   Vec2 selectedTilePos;
   String result;
 
-  public BoardController(BoardPanel boardPanel, String player1Name,
-      String player2Name) {
+  /**
+   * Létrehoz egy új BoardController példányt a megadott játéktábla panellel és
+   * játékosnevekkel.
+   *
+   * @param boardPanel  A játék tábla megjelenítő panelje.
+   * @param player1Name Az első játékos neve.
+   * @param player2Name A második játékos neve.
+   */
+  public BoardController(BoardPanel boardPanel, String player1Name, String player2Name) {
     this.boardPanel = boardPanel;
     this.board = new Board(player1Name, player2Name, boardSize);
     board.setUpBoard();
   }
 
+  /**
+   * Visszaadja a játéktábla méretét.
+   *
+   * @return A tábla mérete.
+   */
   public int getSize() {
     return boardSize;
   }
 
+  /**
+   * Frissíti a tábla állapotát, kezelve a bábuk mozgatását és a promóciót.
+   */
   public void updateBoard() {
     Pawn pawn = board.getPromotable();
     if (pawn != null) {
@@ -47,11 +62,16 @@ public class BoardController {
     }
     boardPanel.clearImages();
     for (Piece piece : board.getPieces()) {
-      boardPanel.addImageTo(piece.getImage(), piece.getPos().x,
-          piece.getPos().y);
+      boardPanel.addImageTo(piece.getImage(), piece.getPos().x, piece.getPos().y);
     }
   }
 
+  /**
+   * Frissíti a kiválasztott bábút és a célpozíciót a felhasználó választása
+   * alapján.
+   *
+   * @param selectedPos A felhasználó által kiválasztott pozíció.
+   */
   public void updateSelected(Vec2 selectedPos) {
     if (board.hasPieceAt(selectedPos, board.getTurn())) {
       selectedPiece = board.getPieceAt(selectedPos, board.getTurn());
@@ -65,19 +85,37 @@ public class BoardController {
     updateBoard();
   }
 
+  /**
+   * Kezeli a jelenlegi játékos lemondását, és megjeleníti az eredményt.
+   */
   public void resign() {
     boardPanel.showResult(board.getNextPlayer().name);
   }
 
+  /**
+   * Promotálja a bábút a megadott bábútípusra.
+   *
+   * @param pawn A promotálni kívánt bábú.
+   */
   public void promotion(Pawn pawn) {
     Type type = boardPanel.promptForPromotion();
     pawn.promoteTo(type, board);
   }
 
+  /**
+   * Elmenti a jelenlegi tábla állapotát a megadott fájlba.
+   *
+   * @param fileToSave A fájl, ahová a tábla állapotát el kell menteni.
+   */
   public void saveBoardTo(File fileToSave) {
     board.saveBoardTo(fileToSave);
   }
 
+  /**
+   * Betölti a tábla állapotát a megadott fájlból.
+   *
+   * @param selectedFile A fájl, ahonnan a tábla állapotát be kell tölteni.
+   */
   public void loadBoardFrom(File selectedFile) {
     try {
       board.loadBoardFrom(selectedFile);
@@ -88,7 +126,10 @@ public class BoardController {
     boardPanelInit();
   }
 
-  public void boardPanelInit(){
+  /**
+   * Inicializálja a tábla panelt egy új játékhoz vagy egy betöltött játék után.
+   */
+  public void boardPanelInit() {
     boardPanel.init();
   }
 }

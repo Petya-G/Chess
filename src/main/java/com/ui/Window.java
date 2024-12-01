@@ -7,6 +7,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+/**
+ * A főablakot reprezentáló osztály.
+ */
 public class Window extends JFrame {
   CardLayout cardLayout;
   JPanel mainPanel;
@@ -18,6 +21,9 @@ public class Window extends JFrame {
   public static Color tileYellow = new Color(0xEBECD0);
   public static Color tileGreen = new Color(0x779556);
 
+  /**
+   * A főablak konstruktora.
+   */
   public Window() {
     this.setTitle("Chess");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,10 +51,18 @@ public class Window extends JFrame {
     showPanel("MainMenu");
   }
 
+  /**
+   * A panel váltásáért felelős metódus.
+   * 
+   * @param name A panel neve
+   */
   public void showPanel(String name) {
     cardLayout.show(mainPanel, name);
   }
 
+  /**
+   * A játéktábla paneljének létrehozása.
+   */
   public void createBoardPanel() {
     playerNames = mainMenu.getPlayerNames();
     boardPanel = new BoardPanel(this);
