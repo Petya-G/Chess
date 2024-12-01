@@ -135,6 +135,23 @@ public abstract class Piece {
     BISHOP,
     QUEEN,
     KING;
+
+    public static Type getType(char pieceChar) {
+      switch (pieceChar) {
+        case 'Q':
+          return Type.QUEEN;
+        case 'R':
+          return Type.ROOK;
+        case 'B':
+          return Type.BISHOP;
+        case 'N':
+          return Type.KNIGHT;
+        case 'K':
+          return Type.KING;
+        default:
+          return Type.PAWN;
+      }
+    }
   }
 
   public enum Direction {

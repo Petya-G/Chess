@@ -3,7 +3,12 @@ package main.java.com.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -38,7 +43,24 @@ public class MainMenu extends JPanel {
     add(startButton);
 
     JButton loadButton = new MenuButton("Load Game", window);
-    loadButton.addActionListener(e -> window.showPanel("LoadPanel"));
+    loadButton.addActionListener(e -> {
+      JFileChooser fileChooser = new JFileChooser();
+      fileChooser.setCurrentDirectory(new File("."));
+      fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("PGN Files", "pgn"));
+
+      int result = fileChooser.showOpenDialog(window);
+      if (result == JFileChooser.APPROVE_OPTION) {
+        File selectedFile = fileChooser.getSelectedFile();
+        String filePath = selectedFile.getAbsolutePath();
+        System.out.println("Loading game from: " + filePath);
+
+        window.createBoardPanel();
+        window.boardPanel.boardCtrl.loadBoardFrom(selectedFile);
+        window.showPanel("BoardPanel");
+      } else {
+        System.out.println("Load game canceled.");
+      }
+    });
     add(loadButton);
 
     JButton exitButton = new MenuButton("Load Game", window);
@@ -46,7 +68,9 @@ public class MainMenu extends JPanel {
     add(exitButton);
   }
 
-  public String[] getPlayerNames() { return playerNames; }
+  public String[] getPlayerNames() {
+    return playerNames;
+  }
 
   private String[] promptForPlayerNames() {
     JTextField player1Field = new JTextField();
@@ -59,8 +83,8 @@ public class MainMenu extends JPanel {
     panel.add(player2Field);
 
     int result = JOptionPane.showConfirmDialog(this, panel, "Player Names",
-                                               JOptionPane.OK_CANCEL_OPTION,
-                                               JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE);
 
     if (result == JOptionPane.OK_OPTION) {
       String player1 = player1Field.getText().trim();
@@ -73,11 +97,11 @@ public class MainMenu extends JPanel {
         player2 = "Player 2";
       }
 
-      return new String[] {player1, player2};
+      return new String[] { player1, player2 };
     } else if (result == JOptionPane.CANCEL_OPTION) {
       return null;
     } else {
-      return new String[] {"Player 1", "Player 2"};
+      return new String[] { "Player 1", "Player 2" };
     }
   }
 }

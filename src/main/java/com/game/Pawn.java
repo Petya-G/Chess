@@ -15,6 +15,7 @@ public class Pawn extends Piece {
       this.image = new ImageIcon("src/main/java/com/images/Chess_plt45.png");
     else
       this.image = new ImageIcon("src/main/java/com/images/Chess_pdt45.png");
+    sign = (color == Color.BLACK) ? 1 : -1;
   }
 
   @Override
@@ -78,7 +79,6 @@ public class Pawn extends Piece {
   }
 
   public Vec2 moveTwo(Board board) {
-    sign = (color == Color.WHITE) ? 1 : -1;
     Vec2 move1 = new Vec2(pos.x, pos.y + 1 * sign);
     Vec2 move2 = new Vec2(pos.x, pos.y + 2 * sign);
 
@@ -88,7 +88,6 @@ public class Pawn extends Piece {
   }
 
   public Vec2 moveOne(Board board) {
-    sign = (color == Color.WHITE) ? 1 : -1;
     Vec2 move1 = new Vec2(pos.x, pos.y + 1 * sign);
 
     if (!board.hasPieceAt(move1))
@@ -108,7 +107,6 @@ public class Pawn extends Piece {
     if (passr != null)
       moves.add(passr);
 
-    sign = (color == Color.WHITE) ? 1 : -1;
     Vec2 diagonalLeft = new Vec2(pos.x - 1, pos.y + 1 * sign);
     Vec2 diagonalRight = new Vec2(pos.x + 1, pos.y + 1 * sign);
 
@@ -128,7 +126,6 @@ public class Pawn extends Piece {
   }
 
   public Vec2 enpassantRight(Board board) {
-    sign = (color == Color.WHITE) ? 1 : -1;
     Vec2 diagonalRight = new Vec2(pos.x + 1, pos.y + 1 * sign);
     Piece p = board.getPieceAt(new Vec2(pos.x + 1, pos.y), getOppositeColor());
     if (p != null) {
@@ -143,7 +140,6 @@ public class Pawn extends Piece {
   }
 
   public Vec2 enpassantLeft(Board board) {
-    sign = (color == Color.WHITE) ? 1 : -1;
     Vec2 diagonalLeft = new Vec2(pos.x - 1, pos.y + 1 * sign);
     Piece p = board.getPieceAt(new Vec2(pos.x - 1, pos.y), getOppositeColor());
     if (p != null) {
@@ -158,7 +154,7 @@ public class Pawn extends Piece {
   }
 
   public boolean isPromotable() {
-    return (color == Color.WHITE && pos.y == 7) || (color == Color.BLACK && pos.y == 0);
+    return (color == Color.WHITE && pos.y == 7) || (color == Color.WHITE && pos.y == 0);
   }
 
   public void promoteTo(Type type, Board board) {

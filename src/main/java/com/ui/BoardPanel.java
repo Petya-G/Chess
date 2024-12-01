@@ -5,10 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -204,9 +201,11 @@ public class BoardPanel extends JPanel {
     this.window = window;
     setLayout(new BorderLayout());
 
-    String[] playerNames = window.playerNames;
-    String p1name = playerNames[0];
-    String p2name = playerNames[1];
+    String p1name = "Player 1", p2name = "Player 2";
+    if (window.playerNames != null) {
+      p1name = window.playerNames[0];
+      p2name = window.playerNames[1];
+    }
 
     boardCtrl = new BoardController(this, p1name, p2name);
     this.size = boardCtrl.getSize();
@@ -231,7 +230,7 @@ public class BoardPanel extends JPanel {
       }
     }
 
-    tiles[4][4].doClick();
+    init();
 
     controlPanel = new ControlPanel();
     JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, gridPanel, controlPanel);
@@ -239,6 +238,10 @@ public class BoardPanel extends JPanel {
     splitPane.setResizeWeight(0.7);
 
     add(splitPane, BorderLayout.CENTER);
+  }
+
+  public void init() {
+    tiles[4][4].doClick();
   }
 
   public void updateMovesPanel() {

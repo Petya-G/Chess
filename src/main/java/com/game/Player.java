@@ -17,7 +17,7 @@ public class Player {
   }
 
   public void setUpPieces(int size) {
-    if (color == Color.WHITE) {
+    if (color == Color.BLACK) {
       for (int i = 0; i < size; i++) {
         pieces.add(new Pawn(color, new Vec2(i, 1)));
       }
@@ -147,5 +147,21 @@ public class Player {
   public boolean isCheckMate(Vec2 pos, Board board) {
     return (((King) getPiece(Type.KING)).getMovesNotChecked(pos, board.turn, board).size() == 0)
         && board.getPlayer().isChecked(board, board.turn);
+  }
+
+  public List<Piece> getPiecesThatHaveMove(Type type, Vec2 move, Board board) {
+    // return pieces.stream().filter(p -> p.getType() == type &&
+    // p.getMoves(board).contains(move)).toList();
+
+    List<Piece> filteredPieces = new ArrayList<>();
+    for(Piece p : getPieces()){
+      if(p.getType() == type && p.getMoves(board).contains(move)){
+        filteredPieces.add(p);
+      }
+    }
+
+    // Log the result
+    System.out.println("Filtered pieces: " + filteredPieces);
+    return filteredPieces;
   }
 }

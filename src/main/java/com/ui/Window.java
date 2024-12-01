@@ -13,6 +13,7 @@ public class Window extends JFrame {
   static MainMenu mainMenu;
   BoardPanel boardPanel;
   HighScorePanel hsPanel;
+  public String[] playerNames;
 
   public static Color tileYellow = new Color(0xEBECD0);
   public static Color tileGreen = new Color(0x779556);
@@ -23,6 +24,7 @@ public class Window extends JFrame {
     this.setResizable(false);
     this.setLocationRelativeTo(null);
     this.setSize(750, 500);
+    this.playerNames = new String[] { "Player1", "Player2" };
 
     ImageIcon image = new ImageIcon("src/main/java/com/images/Chess_nlt45.png");
     this.setIconImage(image.getImage());
@@ -43,17 +45,17 @@ public class Window extends JFrame {
     showPanel("MainMenu");
   }
 
-  public static String[] playerNames;
-
-  public void showPanel(String name) { cardLayout.show(mainPanel, name); }
+  public void showPanel(String name) {
+    cardLayout.show(mainPanel, name);
+  }
 
   public void createBoardPanel() {
     playerNames = mainMenu.getPlayerNames();
-    if (playerNames != null) {
-      boardPanel = new BoardPanel(this);
-      mainPanel.add(boardPanel, "BoardPanel");
-    }
+    boardPanel = new BoardPanel(this);
+    mainPanel.add(boardPanel, "BoardPanel");
   }
 
-  public static void main(String[] args) { Window window = new Window(); }
+  public static void main(String[] args) {
+    Window window = new Window();
+  }
 }

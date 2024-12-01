@@ -1,6 +1,7 @@
 package main.java.com.controller;
 
 import java.io.File;
+import java.io.IOException;
 
 import main.java.com.game.Board;
 import main.java.com.game.Pawn;
@@ -75,5 +76,19 @@ public class BoardController {
 
   public void saveBoardTo(File fileToSave) {
     board.saveBoardTo(fileToSave);
+  }
+
+  public void loadBoardFrom(File selectedFile) {
+    try {
+      board.loadBoardFrom(selectedFile);
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println(e.getMessage());
+    }
+    boardPanelInit();
+  }
+
+  public void boardPanelInit(){
+    boardPanel.init();
   }
 }

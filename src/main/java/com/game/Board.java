@@ -1,11 +1,15 @@
 package main.java.com.game;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 import main.java.com.game.Piece.Color;
@@ -147,7 +151,7 @@ public class Board {
     if (piece.move(pos, this)) {
       if (piece.getColor() == Color.WHITE) {
         StringBuilder pgnMove = new StringBuilder();
-        pgnMove.append((int) Math.floor((turn + 2) / 2) + ". ");
+        pgnMove.append((int) Math.floor((turn + 2) / 2) + ".");
         pgnMove.append(piece.lastMove);
         moves.add(pgnMove.toString());
       }
@@ -155,8 +159,9 @@ public class Board {
       else {
         String lastMove = moves.getLast();
         StringBuilder pgnMove = new StringBuilder(lastMove);
-        pgnMove.append(" ");
+        pgnMove.append(' ');
         pgnMove.append(piece.lastMove);
+        pgnMove.append(' ');
 
         moves.removeLast();
         moves.add(pgnMove.toString());
@@ -202,5 +207,107 @@ public class Board {
       e.printStackTrace();
       System.out.println("Error saving the board to file: " + e.getMessage());
     }
+  }
+
+  public void loadBoardFrom(File fileToLoad) throws IOException {
+    List<String> lines = Files.readAllLines(fileToLoad.toPath());
+
+    String player1Name = null, player2Name = null;
+    for (String line : lines) {
+      if (line.startsWith("[White ")) {
+        player1Name = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+      }
+
+      else if (line.startsWith("[Black ")) {
+        player2Name = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+      }
+    }
+    player1.name = player1Name;
+    player2.name = player2Name;
+
+    for (String line : lines) {
+      if (line.matches("\\d.*")) {
+        String[] parts = line.split("\\s+");
+        for (int i = 0; i < parts.length; i++) {
+          Color color = i % 3 == 1 ? Color.WHITE : Color.BLACK;
+          String regex = "\\d+\\.|\\+|#";
+          String moveString = parts[i].replaceAll(regex, "");
+          Vec2 move = null;
+          Vec2 pos = null;
+          Type type = null;
+
+          if (moveString.matches("[a-h][1-8]")) {
+            move = new Vec2(moveString);
+            type = Type.PAWN;
+          } else if (moveString.matches("[a-h]?[1-8]?x[a-h][1-8]")) {
+            String[] s = moveString.split("x");
+            String posString = s[0].substring(1);
+            if (posString.length() != 0)
+              pos = new Vec2(posString);
+            move = new Vec2(s[1]);
+            type = Type.PAWN;
+          } else if (moveString.matches("[a-h][1-8]=[QRBN]")) {
+            move = new Vec2(moveString.substring(0, 2));
+            type = Type.PAWN;
+          } else if (moveString.matches("[NBRQK][a-h]?[1-8]?[x][a-h][1-8]")) {
+            String[] s = moveString.split("x");
+            type = Type.getType(s[0].charAt(0));
+            String posString = s[0].substring(1);
+            if (posString.length() != 0)
+              pos = new Vec2(posString);
+            move = new Vec2(s[1]);
+          } else if (moveString.matches("[NBRQK][a-h]?[1-8]?[a-h][1-8]")) {
+            String[] s = splitString(moveString);
+            type = Type.getType(s[0].charAt(0));
+            String posString = s[0].substring(1);
+            if (posString.length() != 0)
+              pos = new Vec2(posString);
+            move = new Vec2(s[1]);
+          } else if (moveString.equals("O-O")) {
+            type = Type.KING;
+            move = ((King) getPlayer().getPiece(type)).kingsideCastle(this);
+          } else if (moveString.equals("O-O-O")) {
+            type = Type.KING;
+            move = ((King) getPlayer().getPiece(type)).queensideCastle(this);
+          }
+
+          if (move != null && type != null) {
+            for (Piece p : getPlayer(color).getPiecesThatHaveMove(type, move, this)) {
+              if (pos != null) {
+                if (pos.equals(p.getPos())) {
+                  p.move(move, this);
+                }
+              } else {
+                p.move(move, this);
+              }
+            }
+          } else {
+            System.out.println("Invalid move: " + moveString);
+          }
+
+        }
+      }
+    }
+  }
+
+  public static String[] splitString(String s) {
+    // Find the position of the last alphabetic character
+    int lastAlphabeticIndex = -1;
+
+    // Traverse the string to find the index of the last alphabetic character
+    for (int i = 0; i < s.length(); i++) {
+      if (Character.isLetter(s.charAt(i))) {
+        lastAlphabeticIndex = i;
+      }
+    }
+
+    // If a last alphabetic character was found
+    if (lastAlphabeticIndex != -1) {
+      String firstPart = s.substring(0, lastAlphabeticIndex); // Everything before the last alphabetic character
+      String secondPart = s.substring(lastAlphabeticIndex); // The last alphabetic character and everything after
+
+      return new String[] { firstPart, secondPart }; // Return the parts
+    }
+    return new String[2];
   }
 }

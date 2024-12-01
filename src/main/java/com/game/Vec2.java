@@ -10,6 +10,16 @@ public class Vec2 {
 		this.y = y;
 	}
 
+	public Vec2(String algebraic) {
+		if (algebraic.length() == 2) {
+			char file = algebraic.charAt(0);
+			char rank = algebraic.charAt(1);
+
+			this.x = file - 'a';
+			this.y = 8 - Character.getNumericValue(rank);
+		}
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
