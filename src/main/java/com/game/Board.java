@@ -229,7 +229,7 @@ public class Board {
       if (line.matches("\\d.*")) {
         String[] parts = line.split("\\s+");
         for (int i = 0; i < parts.length; i++) {
-          Color color = i % 3 == 1 ? Color.WHITE : Color.BLACK;
+          Color color = i % 2 == 0 ? Color.WHITE : Color.BLACK;
           String regex = "\\d+\\.|\\+|#";
           String moveString = parts[i].replaceAll(regex, "");
           Vec2 move = null;
@@ -275,10 +275,10 @@ public class Board {
             for (Piece p : getPlayer(color).getPiecesThatHaveMove(type, move, this)) {
               if (pos != null) {
                 if (pos.equals(p.getPos())) {
-                  p.move(move, this);
+                  MovePieceTo(p, move);
                 }
               } else {
-                p.move(move, this);
+                MovePieceTo(p, move);
               }
             }
           } else {

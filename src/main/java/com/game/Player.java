@@ -2,6 +2,8 @@ package main.java.com.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import main.java.com.game.Piece.Color;
 import main.java.com.game.Piece.Type;
 
@@ -144,9 +146,13 @@ public class Player {
     return checked;
   }
 
+  public List<Vec2> getMoves(Board board) {
+    return getPieces().stream().flatMap(piece -> piece.getMoves(board).stream())
+        .collect(Collectors.toList());
+  }
+
   public boolean isCheckMate(Vec2 pos, Board board) {
-    return (((King) getPiece(Type.KING)).getMovesNotChecked(pos, board.turn, board).size() == 0)
-        && board.getPlayer().isChecked(board, board.turn);
+    return board.getNextPlayer().getMoves(board).size() == 0 && board.getNextPlayer().isChecked(board, board.turn);
   }
 
   public List<Piece> getPiecesThatHaveMove(Type type, Vec2 move, Board board) {
@@ -154,8 +160,8 @@ public class Player {
     // p.getMoves(board).contains(move)).toList();
 
     List<Piece> filteredPieces = new ArrayList<>();
-    for(Piece p : getPieces()){
-      if(p.getType() == type && p.getMoves(board).contains(move)){
+    for (Piece p : getPieces()) {
+      if (p.getType() == type && p.getMoves(board).contains(move)) {
         filteredPieces.add(p);
       }
     }
