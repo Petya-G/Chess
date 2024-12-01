@@ -184,7 +184,7 @@ public class Board {
    * 
    * @return igaz, ha patthylezet van, különben hamis
    */
-  private boolean isDraw() {
+   public boolean isDraw() {
     if (player1.countType(null) == 1 && player2.countType(null) == 1)
       return true;
     if (player1.countType(null) == 1 && player2.countType(null) == 2 &&
@@ -231,7 +231,7 @@ public class Board {
    * @return a játék állapota (pl. "Draw" vagy a győztes neve), vagy null ha nincs
    *         különleges állapot
    */
-  public String MovePieceTo(Piece piece, Vec2 pos) {
+  public String movePieceTo(Piece piece, Vec2 pos) {
     if (isDraw()) {
       return "Draw";
     }
@@ -375,10 +375,10 @@ public class Board {
             for (Piece p : getPlayer(color).getPiecesThatHaveMove(type, move, this)) {
               if (pos != null) {
                 if (pos.equals(p.getPos())) {
-                  MovePieceTo(p, move);
+                  movePieceTo(p, move);
                 }
               } else {
-                MovePieceTo(p, move);
+                movePieceTo(p, move);
               }
             }
           } else {
@@ -414,4 +414,9 @@ public class Board {
     }
     return new String[2];
   }
+
+public void placePiece(Rook rook) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'placePiece'");
+}
 }

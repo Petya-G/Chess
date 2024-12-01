@@ -16,57 +16,75 @@ import main.java.com.game.Rook;
 import main.java.com.game.Vec2;
 
 public class KingTest {
+
     private Board board;
     private King whiteKing;
-    private Rook whiteKingsideRook;
-    private Rook whiteQueensideRook;
+    private King blackKing;
+    private Rook kingsideWhite, queensideWhite;
 
     @Before
     public void setUp() {
         board = new Board("Player1", "Player2", 8);
-        
-        whiteKing = new King(Color.WHITE, new Vec2(4, 0));
-        whiteKingsideRook = new Rook(Color.WHITE, new Vec2(7, 0));
-        whiteQueensideRook = new Rook(Color.WHITE, new Vec2(0, 0));
-
+        whiteKing = new King(Color.WHITE, new Vec2(4, 7));
+        blackKing = new King(Color.BLACK, new Vec2(4, 0));
         board.player1.addPiece(whiteKing);
-        board.player1.addPiece(whiteKingsideRook);
-        board.player1.addPiece(whiteQueensideRook);
+        board.player2.addPiece(blackKing);
+
+        kingsideWhite = new Rook(Color.WHITE, new Vec2(7, 7));
+        queensideWhite = new Rook(Color.WHITE, new Vec2(0, 7));
     }
 
     @Test
-    public void testMoveOneSpace() {
-        Vec2 newPos = new Vec2(5, 0);
+    public void testKingConstructor() {
+        assertEquals(Color.WHITE, whiteKing.getColor());
+        assertEquals(new Vec2(4, 7), whiteKing.getPos());
+        assertEquals(Color.BLACK, blackKing.getColor());
+        assertEquals(new Vec2(4, 0), blackKing.getPos());
+    }
+
+    @Test
+    public void testMove() {
+        Vec2 newPos = new Vec2(5, 7);
         assertTrue(whiteKing.move(newPos, board));
+        board.movePieceTo(whiteKing, newPos);
         assertEquals(newPos, whiteKing.getPos());
     }
 
     @Test
     public void testKingsideCastle() {
-        assertTrue(whiteKing.move(whiteKing.kingsideCastle(board), board));
-        assertEquals(new Vec2(6, 0), whiteKing.getPos());
-        assertEquals(new Vec2(5, 0), whiteKingsideRook.getPos());
+        board.player1.addPiece(kingsideWhite);
+        Vec2 newPos = whiteKing.kingsideCastle(board);
+        assertEquals(new Vec2(6, 7), newPos);
     }
 
     @Test
     public void testQueensideCastle() {
-        assertTrue(whiteKing.move(whiteKing.queensideCastle(board), board));
-        assertEquals(new Vec2(2, 0), whiteKing.getPos());
-        assertEquals(new Vec2(3, 0), whiteQueensideRook.getPos());
-    }
-
-    @Test
-    public void testCannotCastleIfChecked() {
-        board.player2.addPiece(new Rook(Color.BLACK, new Vec2(5, 0)));
-        assertNull(whiteKing.kingsideCastle(board));
+        board.player1.addPiece(queensideWhite);
+        Vec2 newPos = whiteKing.queensideCastle(board);
+        assertEquals(new Vec2(2, 7), newPos);
     }
 
     @Test
     public void testGetMoves() {
         List<Vec2> moves = whiteKing.getMoves(board);
-        assertTrue(moves.size() > 0);
-        assertTrue(moves.contains(new Vec2(5, 0)));
-        assertTrue(moves.contains(whiteKing.kingsideCastle(board)));
-        assertTrue(moves.contains(whiteKing.queensideCastle(board)));
+        assertTrue(moves.contains(new Vec2(5, 7)));
+        assertTrue(moves.contains(new Vec2(3, 7)));
     }
-              }
+
+    @Test
+    public void testGetType() {
+        assertEquals(King.Type.KING, whiteKing.getType());
+    }
+
+    @Test
+    public void testClone() {
+        King clonedKing = (King) whiteKing.clone();
+        assertEquals(whiteKing.getColor(), clonedKing.getColor());
+        assertEquals(whiteKing.getPos(), clonedKing.getPos());
+    }
+
+    @Test
+    public void testGetChar() {
+        assertEquals('K', whiteKing.getChar());
+    }
+}

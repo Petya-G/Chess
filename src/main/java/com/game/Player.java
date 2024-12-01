@@ -117,7 +117,7 @@ public class Player {
    * @param type a bábu típusa
    * @return a bábu a megadott típus alapján, ha létezik, egyébként null
    */
-  public Piece getPiece(Piece.Type type) {
+  public Piece getPiece(Type type) {
     return pieces.stream()
         .filter(p -> p.getType() == type)
         .findFirst()
@@ -145,6 +145,7 @@ public class Player {
    */
   public boolean isChecked(Board board, int turn) {
     King king = (King) getPiece(Type.KING);
+    int a = 1;
     List<Vec2> moves = new ArrayList<>();
 
     if (color == Color.WHITE) {

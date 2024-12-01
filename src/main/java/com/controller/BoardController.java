@@ -51,7 +51,7 @@ public class BoardController {
     }
 
     if (selectedPiece != null && selectedTilePos != null) {
-      result = board.MovePieceTo(selectedPiece, selectedTilePos);
+      result = board.movePieceTo(selectedPiece, selectedTilePos);
       boardPanel.updateMovesPanel();
       if (result != null) {
         boardPanel.showResult(result);

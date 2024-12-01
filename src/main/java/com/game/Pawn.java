@@ -214,7 +214,7 @@ public class Pawn extends Piece {
    * @return igaz, ha a gyalogot lehet promótálni, egyébként hamis
    */
   public boolean isPromotable() {
-    return (color == Color.WHITE && pos.y == 7) || (color == Color.WHITE && pos.y == 0);
+    return (color == Color.WHITE && pos.y == 0) || (color == Color.BLACK && pos.y == 7);
   }
 
   /**
