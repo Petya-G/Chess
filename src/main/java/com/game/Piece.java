@@ -3,6 +3,7 @@ package main.java.com.game;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
@@ -84,6 +85,21 @@ public abstract class Piece {
   public abstract List<Vec2> getMoves(Board board);
 
   /**
+   * Visszaadja a lehetséges lépéseket, amelyek nem vezetnek sakkhoz.
+   *
+   * @param board a játék tábla
+   * @return a lépések listája, amelyek nem vezetnek sakkhoz
+   */
+  public List<Vec2> getMovesNotChecked(Board board) {
+    return getMoves(board).stream()
+        .filter(m -> {
+          Piece attacked = board.getPieceAt(m, getColor().getOppositeColor());
+          return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null);
+        })
+        .collect(Collectors.toList());
+  }
+
+  /**
    * Visszaadja a lépést PGN formátumban.
    * 
    * @param newPos   pozició ahova a bábu lép
@@ -134,7 +150,7 @@ public abstract class Piece {
   private boolean hasSameMoveOnRow(Vec2 newPos, Board board) {
     for (Piece p : board.getPlayer().getPieces()) {
       for (Vec2 m : p.getMoves(board)) {
-        if (!p.equals(this) && p.pos.y == this.pos.y && newPos.equals(m))
+        if (!p.equals(this) && this.getType() != p.getType() && p.pos.y == this.pos.y && newPos.equals(m))
           return true;
       }
     }
@@ -152,7 +168,7 @@ public abstract class Piece {
   private boolean hasSameMoveOnColumn(Vec2 newPos, Board board) {
     for (Piece p : board.getPlayer().getPieces()) {
       for (Vec2 m : p.getMoves(board)) {
-        if (!p.equals(this) && p.pos.x == this.pos.x && newPos.equals(m))
+        if (!p.equals(this) && this.getType() != p.getType() && p.pos.x == this.pos.x && newPos.equals(m))
           return true;
       }
     }
@@ -207,6 +223,10 @@ public abstract class Piece {
   public enum Color {
     WHITE,
     BLACK;
+
+    public Color getOppositeColor() {
+      return (this == WHITE) ? BLACK : WHITE;
+    }
   }
 
   /**

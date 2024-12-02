@@ -34,7 +34,7 @@ public class BoardPanel extends JPanel {
   /**
    * Egy mezőt reprezentáló gomb.
    */
-  class Tile extends JButton {
+  public class Tile extends JButton {
     private JLabel rowLabel;
     private JLabel columnLabel;
 
@@ -105,7 +105,7 @@ public class BoardPanel extends JPanel {
   /**
    * Játékos nevét megjelenítő címke.
    */
-  class PlayerNameLabel extends JLabel {
+  public class PlayerNameLabel extends JLabel {
     public PlayerNameLabel(String name) {
       super(name, JLabel.LEFT);
     }
@@ -114,11 +114,11 @@ public class BoardPanel extends JPanel {
   /**
    * A játék irányításáért felelős panel.
    */
-  class ControlPanel extends JPanel {
+  public class ControlPanel extends JPanel {
     /**
      * A játék irányításáért felelős gomb.
      */
-    class ControlButton extends JButton {
+    public class ControlButton extends JButton {
       public ControlButton(String text) {
         super(text);
         setBackground(new Color(0x383734));
@@ -192,7 +192,7 @@ public class BoardPanel extends JPanel {
   /**
    * A lépések megjelenítéséért felelős panel.
    */
-  class MovesPanel extends JPanel {
+  public class MovesPanel extends JPanel {
     private JTable movesTable;
     private DefaultTableModel movesTableModel;
 

@@ -184,7 +184,7 @@ public class Board {
    * 
    * @return igaz, ha patthylezet van, különben hamis
    */
-   public boolean isDraw() {
+  public boolean isDraw() {
     if (player1.countType(null) == 1 && player2.countType(null) == 1)
       return true;
     if (player1.countType(null) == 1 && player2.countType(null) == 2 &&
@@ -414,9 +414,4 @@ public class Board {
     }
     return new String[2];
   }
-
-public void placePiece(Rook rook) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'placePiece'");
-}
 }

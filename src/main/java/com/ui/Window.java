@@ -69,6 +69,10 @@ public class Window extends JFrame {
     mainPanel.add(boardPanel, "BoardPanel");
   }
 
+  
+  /** 
+   * @param args
+   */
   public static void main(String[] args) {
     Window window = new Window();
   }

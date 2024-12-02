@@ -145,17 +145,10 @@ public class Player {
    */
   public boolean isChecked(Board board, int turn) {
     King king = (King) getPiece(Type.KING);
-    int a = 1;
     List<Vec2> moves = new ArrayList<>();
 
-    if (color == Color.WHITE) {
-      for (Piece p : board.player2.getPieces()) {
-        moves.addAll(p.getMoves(board));
-      }
-    } else {
-      for (Piece p : board.player1.getPieces()) {
-        moves.addAll(p.getMoves(board));
-      }
+    for (Piece p : board.getPlayer(color.getOppositeColor()).getPieces()) {
+      moves.addAll(p.getMoves(board));
     }
 
     for (Vec2 move : moves) {
@@ -226,8 +219,18 @@ public class Player {
    * @return a játékos összes lehetséges lépése
    */
   private List<Vec2> getMoves(Board board) {
-    return getPieces().stream().flatMap(piece -> piece.getMoves(board).stream())
-        .collect(Collectors.toList());
+    List<Vec2> moves = new ArrayList<>();
+
+    for (Piece p : getPieces()) {
+      for (Vec2 m : p.getMoves(board)) {
+        Piece attacked = board.getPieceAt(m, color.getOppositeColor());
+        if (!isMoveChecked(board, p, m, attacked, null)) {
+          moves.add(m);
+        }
+      }
+    }
+
+    return moves;
   }
 
   /**
@@ -237,7 +240,7 @@ public class Player {
    * @return igaz, ha a játékos sakkmattot kapott, egyébként hamis
    */
   public boolean isCheckMate(Board board) {
-    return board.getNextPlayer().getMoves(board).size() == 0 && board.getNextPlayer().isChecked(board, board.turn);
+    return getMoves(board).size() == 0 && isChecked(board, board.turn);
   }
 
   /**

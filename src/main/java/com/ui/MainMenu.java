@@ -21,7 +21,7 @@ public class MainMenu extends JPanel {
   /**
    * A menü gombot reprezentáló osztály.
    */
-  class MenuButton extends JButton {
+  public class MenuButton extends JButton {
     public MenuButton(String name, Window window) {
       super(name);
       this.setPreferredSize(new Dimension(150, 50));

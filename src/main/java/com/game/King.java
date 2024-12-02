@@ -2,6 +2,8 @@ package main.java.com.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.swing.ImageIcon;
 
 /**
@@ -137,8 +139,33 @@ public class King extends Piece {
     Vec2 kc = kingsideCastle(board);
     if (kc != null)
       moves.add(kc);
-
     return moves;
+  }
+
+  /**
+   * Visszaadja a lehetséges lépéseket, amelyek nem vezetnek sakkhoz.
+   *
+   * @param board a játék tábla
+   * @return a lépések listája, amelyek nem vezetnek sakkhoz
+   */
+  @Override
+  public List<Vec2> getMovesNotChecked(Board board) {
+    return getMoves(board).stream()
+        .filter(m -> {
+          Vec2 qc = queensideCastle(board);
+          Vec2 kc = kingsideCastle(board);
+          Piece attacked = board.getPieceAt(m, getColor().getOppositeColor());
+          if (qc != null && m.equals(qc)) {
+            attacked = getKingsideRook(board);
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, getKingsideRookPos());
+          } else if (kc != null && m.equals(kc)) {
+            attacked = getQueensideRook(board);
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, getQueensideRookPos());
+          } else {
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null);
+          }
+        })
+        .collect(Collectors.toList());
   }
 
   /**
@@ -148,7 +175,7 @@ public class King extends Piece {
    * @return A király oldalán lévő bástya.
    */
   private Rook getKingsideRook(Board board) {
-    return (Rook) board.getPlayer().getPieceAt(new Vec2(pos.x + 3, pos.y), color);
+    return (Rook) board.getPlayer(color).getPieceAt(new Vec2(pos.x + 3, pos.y), color);
   }
 
   /**
@@ -158,7 +185,7 @@ public class King extends Piece {
    * @return A vezér oldalán lévő bástya.
    */
   private Rook getQueensideRook(Board board) {
-    return (Rook) board.getPlayer().getPieceAt(new Vec2(pos.x - 4, pos.y), color);
+    return (Rook) board.getPlayer(color).getPieceAt(new Vec2(pos.x - 4, pos.y), color);
   }
 
   /**

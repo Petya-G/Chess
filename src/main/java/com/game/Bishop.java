@@ -1,6 +1,7 @@
 package main.java.com.game;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
@@ -62,4 +63,5 @@ public class Bishop extends Piece {
 	public char getChar() {
 		return 'B';
 	}
+
 }

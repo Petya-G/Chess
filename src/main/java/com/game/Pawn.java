@@ -2,6 +2,8 @@ package main.java.com.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.swing.ImageIcon;
 
 /**
@@ -169,21 +171,75 @@ public class Pawn extends Piece {
   }
 
   /**
-   * Visszaadja a gyalog en passant balra lépését.
+   * Visszaadja a lehetséges lépéseket, amelyek nem vezetnek sakkhoz.
+   *
+   * @param board a játék tábla
+   * @return a lépések listája, amelyek nem vezetnek sakkhoz
+   */
+  @Override
+  public List<Vec2> getMovesNotChecked(Board board) {
+    return getMoves(board).stream()
+        .filter(m -> {
+          Vec2 passl = enpassantLeft(board);
+          Vec2 passr = enpassantRight(board);
+
+          Piece attacked = board.getPieceAt(m, getColor().getOppositeColor());
+          if (passl != null && m.equals(passl)) {
+            attacked = passantLeftPawn(board);
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null);
+          } else if (passr != null && m.equals(passr)) {
+            attacked = passantRightPawn(board);
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null);
+          } else {
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null);
+          }
+        })
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * Megkeresi a jobb oldali gyalogot, amelyik en passant támadható.
+   *
+   * @param board A játék tábla.
+   * @return A jobb oldali gyalog, ha létezik és en passant támadható, különben
+   *         null.
+   */
+  private Pawn passantRightPawn(Board board) {
+    Piece piece = board.getPieceAt(new Vec2(pos.x + 1, pos.y), getOppositeColor());
+    if (piece != null && piece.getType() == Type.PAWN) {
+      return (Pawn) piece;
+    }
+    return null;
+  }
+
+  /**
+   * Visszaadja a gyalog en passant jobbra lépését.
    * 
    * @param board a játéktábla
-   * @return a gyalog en passant balra lépésének pozíciója
+   * @return a gyalog en passant jobbra lépésének pozíciója
    */
   private Vec2 enpassantRight(Board board) {
     Vec2 diagonalRight = new Vec2(pos.x + 1, pos.y + 1 * sign);
-    Piece p = board.getPieceAt(new Vec2(pos.x + 1, pos.y), getOppositeColor());
+    Pawn p = passantRightPawn(board);
     if (p != null) {
-      if (p.getType() != Type.PAWN)
-        return null;
-      Pawn pawn = (Pawn) p;
-      if (pawn.getType() == Type.PAWN && pawn.moved2 == board.turn - 1) {
+      if (p.moved2 == board.turn - 1) {
         return diagonalRight;
       }
+    }
+    return null;
+  }
+
+  /**
+   * Megkeresi a bal oldali gyalogot, amelyik en passant támadható.
+   *
+   * @param board A játék tábla.
+   * @return A bal oldali gyalog, ha létezik és en passant támadható, különben
+   *         null.
+   */
+  private Pawn passantLeftPawn(Board board) {
+    Piece piece = board.getPieceAt(new Vec2(pos.x - 1, pos.y), getOppositeColor());
+    if (piece != null && piece.getType() == Type.PAWN) {
+      return (Pawn) piece;
     }
     return null;
   }
@@ -196,12 +252,9 @@ public class Pawn extends Piece {
    */
   private Vec2 enpassantLeft(Board board) {
     Vec2 diagonalLeft = new Vec2(pos.x - 1, pos.y + 1 * sign);
-    Piece p = board.getPieceAt(new Vec2(pos.x - 1, pos.y), getOppositeColor());
+    Pawn p = passantLeftPawn(board);
     if (p != null) {
-      if (p.getType() != Type.PAWN)
-        return null;
-      Pawn pawn = (Pawn) p;
-      if (pawn.getType() == Type.PAWN && pawn.moved2 == board.turn - 1) {
+      if (p.moved2 == board.turn - 1) {
         return diagonalLeft;
       }
     }
@@ -250,7 +303,7 @@ public class Pawn extends Piece {
   /**
    * Visszaadja a gyalog karakterét.
    *
-   * @return 'P' karakter.
+   * @return ' ' karakter.
    */
   @Override
   public char getChar() {
