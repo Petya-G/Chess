@@ -96,7 +96,6 @@ public class BoardPanel extends JPanel {
       Vec2 pos = new Vec2(j, i);
 
       addActionListener(e -> {
-        System.out.println("Tile selected: " + pos.x + ", " + pos.y);
         boardCtrl.updateSelected(pos);
       });
     }

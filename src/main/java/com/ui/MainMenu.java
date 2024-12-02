@@ -37,7 +37,7 @@ public class MainMenu extends JPanel {
    * @param window A főablak
    */
   public MainMenu(Window window) {
-    GridLayout gridLayout = new GridLayout(3, 3, 20, 20);
+    GridLayout gridLayout = new GridLayout(4, 4, 10, 10);
     setLayout(gridLayout);
 
     JButton startButton = new MenuButton("Start New Game", window);
@@ -72,7 +72,11 @@ public class MainMenu extends JPanel {
     });
     add(loadButton);
 
-    JButton exitButton = new MenuButton("Load Game", window);
+    JButton highScoresButton = new MenuButton("High Scores", window);
+    highScoresButton.addActionListener(e -> window.showPanel("HighScores"));
+    add(highScoresButton);
+
+    JButton exitButton = new MenuButton("Exit", window);
     exitButton.addActionListener(e -> System.exit(0));
     add(exitButton);
   }

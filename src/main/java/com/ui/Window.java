@@ -42,7 +42,7 @@ public class Window extends JFrame {
     mainMenu = new MainMenu(this);
     mainPanel.add(mainMenu, "MainMenu");
 
-    hsPanel = new HighScorePanel();
+    hsPanel = new HighScorePanel(this);
     mainPanel.add(hsPanel, "HighScores");
 
     add(mainPanel);
