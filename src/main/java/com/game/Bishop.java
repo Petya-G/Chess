@@ -1,14 +1,13 @@
 package main.java.com.game;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
 /**
  * A futót reprezentáló osztály.
  */
-public class Bishop extends Piece {
+public class Bishop extends Piece implements Cloneable {
 	/**
 	 * A Bishop osztály konstruktora.
 	 *

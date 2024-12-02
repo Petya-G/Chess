@@ -2,14 +2,13 @@ package main.java.com.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
 /**
  * A huszárt reprezentáló osztály.
  */
-public class Knight extends Piece {
+public class Knight extends Piece  {
 
   /**
    * A Knight osztály konstruktora.

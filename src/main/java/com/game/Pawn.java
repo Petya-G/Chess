@@ -66,7 +66,7 @@ public class Pawn extends Piece {
     if (newPos.equals(enpassantLeft(board))) {
       attacked = board.getNextPlayer().getPieceAt(new Vec2(pos.x - 1, pos.y), getOppositeColor());
       if (!board.getPlayer().isMoveChecked(board, this, newPos, attacked,
-          null)) {
+          null, false)) {
         if (super.move(newPos, board)) {
           super.updateLastMove(newPos, attacked, board);
           String s = lastMove;
@@ -81,7 +81,7 @@ public class Pawn extends Piece {
     else if (newPos.equals(enpassantRight(board))) {
       attacked = board.getNextPlayer().getPieceAt(new Vec2(pos.x + 1, pos.y), getOppositeColor());
       if (!board.getPlayer().isMoveChecked(board, this, newPos, attacked,
-          null)) {
+          null, false)) {
         if (super.move(newPos, board)) {
           super.updateLastMove(newPos, attacked, board);
           String s = lastMove;
@@ -186,12 +186,12 @@ public class Pawn extends Piece {
           Piece attacked = board.getPieceAt(m, getColor().getOppositeColor());
           if (passl != null && m.equals(passl)) {
             attacked = passantLeftPawn(board);
-            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null);
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null, false);
           } else if (passr != null && m.equals(passr)) {
             attacked = passantRightPawn(board);
-            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null);
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null, false);
           } else {
-            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null);
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null, false);
           }
         })
         .collect(Collectors.toList());

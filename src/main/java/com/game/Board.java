@@ -12,12 +12,28 @@ import java.util.stream.Collectors;
 import main.java.com.game.Piece.Color;
 import main.java.com.game.Piece.Type;
 
-public class Board {
+public class Board implements Cloneable {
   public Player player1, player2;
   int size;
   Color turnColor;
   int turn;
   public List<String> moves;
+
+  @Override
+  public Board clone() {
+    try {
+      Board clonedBoard = (Board) super.clone();
+
+      clonedBoard.player1 = this.player1.clone();
+      clonedBoard.player2 = this.player2.clone();
+
+      clonedBoard.moves = new ArrayList<>(this.moves);
+
+      return clonedBoard;
+    } catch (CloneNotSupportedException e) {
+      throw new AssertionError();
+    }
+  }
 
   /**
    * Új Board objektumot hoz létre a megadott játékosnevekkel és tábla mérettel.
@@ -414,4 +430,6 @@ public class Board {
     }
     return new String[2];
   }
+
+  
 }

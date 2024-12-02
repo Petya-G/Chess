@@ -10,7 +10,21 @@ import main.java.com.game.Piece.Type;
 /**
  * Egy játékost reprezentáló osztály.
  */
-public class Player {
+public class Player implements Cloneable {
+  @Override
+  public Player clone() {
+    try {
+      Player clonedPlayer = (Player) super.clone();
+      clonedPlayer.pieces = new ArrayList<>();
+      for (Piece piece : this.pieces) {
+        clonedPlayer.pieces.add(piece.clone());
+      }
+      return clonedPlayer;
+    } catch (CloneNotSupportedException e) {
+      throw new AssertionError();
+    }
+  }
+
   public String name;
   private Color color;
   private List<Piece> pieces;
@@ -140,10 +154,9 @@ public class Player {
    * Megadja, hogy a játékos királya sakkban van-e.
    * 
    * @param board a játéktábla
-   * @param turn  a játék lépésszáma
    * @return igaz, ha a játékos királya sakkban van, egyébként hamis
    */
-  public boolean isChecked(Board board, int turn) {
+  public boolean isChecked(Board board) {
     King king = (King) getPiece(Type.KING);
     List<Vec2> moves = new ArrayList<>();
 
@@ -167,49 +180,36 @@ public class Player {
    * @param pPos      az első bábu új pozíciója
    * @param secondary a második bábu
    * @param sPos      a második bábu új pozíciója (ha ennek nem null az értéket,
+   * @param checkmate sakkmattot vizsgálunk-e
    *                  akkor a második bábút ide mozgatjuk)
    * @return igaz, ha a játékos királya sakkban van a megadott lépés után,
    *         egyébként hamis
    */
-  public boolean isMoveChecked(Board board, Piece primary, Vec2 pPos, Piece secondary,
-      Vec2 sPos) {
-    Piece oPrimary = primary;
-    board.getPlayer(primary.getColor()).removePiece(primary);
+  public boolean isMoveChecked(Board board, Piece primary, Vec2 pPos, Piece secondary, Vec2 sPos, boolean checkmate) {
+    Board tempBoard = board.clone();
 
     Piece nPrimary = primary.clone();
     nPrimary.pos = pPos;
-    board.getPlayer(primary.getColor()).addPiece(nPrimary);
+    tempBoard.getPlayer(primary.getColor()).removePiece(primary);
+    tempBoard.getPlayer(primary.getColor()).addPiece(nPrimary);
 
-    boolean checked;
     if (secondary == null && sPos == null) {
-      checked = isChecked(board, board.turn);
-    }
-
-    else {
+    } else {
       Piece oSecondary = secondary.clone();
 
       if (sPos == null) {
-        board.getPlayer(primary.getOppositeColor()).removePiece(secondary);
-        checked = isChecked(board, board.turn);
-        board.getPlayer(primary.getOppositeColor()).addPiece(oSecondary);
-      }
-
-      else {
-        board.getPlayer(primary.getColor()).removePiece(secondary);
+        tempBoard.getPlayer(primary.getOppositeColor()).removePiece(secondary);
+      } else {
+        tempBoard.getPlayer(primary.getColor()).removePiece(secondary);
         Piece nSecondary = oSecondary.clone();
         nSecondary.pos = sPos;
-        board.getPlayer(primary.getColor()).addPiece(nSecondary);
-
-        checked = isChecked(board, board.turn);
-        board.getPlayer(primary.getColor()).removePiece(nSecondary);
-        board.getPlayer(primary.getColor()).addPiece(oSecondary);
+        tempBoard.getPlayer(primary.getColor()).addPiece(nSecondary);
       }
     }
 
-    board.getPlayer(primary.getColor()).removePiece(nPrimary);
-    board.getPlayer(primary.getColor()).addPiece(oPrimary);
-
-    return checked;
+    boolean check = tempBoard.getPlayer(color).isChecked(tempBoard);
+    boolean checkm = checkmate ? tempBoard.getPlayer(color).isCheckMate(tempBoard) : true;
+    return check && checkm;
   }
 
   /**
@@ -219,10 +219,10 @@ public class Player {
    * @return a játékos lépései amik nem vezetnek sakkhoz
    */
   private List<Vec2> getMovesNotChecked(Board board) {
-      List<Piece> ps = new ArrayList<>(pieces);
-      return ps.stream()
-               .flatMap(p -> p.getMovesNotChecked(board).stream())
-               .collect(Collectors.toList());
+    List<Piece> ps = new ArrayList<>(pieces);
+    return ps.stream()
+        .flatMap(p -> p.getMovesNotChecked(board).stream())
+        .collect(Collectors.toList());
   }
 
   /**
@@ -232,7 +232,11 @@ public class Player {
    * @return igaz, ha a játékos sakkmattot kapott, egyébként hamis
    */
   public boolean isCheckMate(Board board) {
-    return getMovesNotChecked(board).size() == 0 && isChecked(board, board.turn);
+    return getMovesNotChecked(board).size() == 0 && isChecked(board);
+  }
+
+  public boolean isMoveCheckmate(Board board, Piece primary, Vec2 pPos, Piece secondary, Vec2 sPos) {
+    return false;
   }
 
   /**

@@ -37,7 +37,7 @@ public class King extends Piece {
     if (newPos.equals(kingsideCastle(board))) {
       Rook rook = getKingsideRook(board);
       if (!board.getPlayer().isMoveChecked(board, this, pos, rook,
-          getKingsideRookPos()) &&
+          getKingsideRookPos(), false) &&
           rook.firstMove && this.firstMove) {
         if (super.move(newPos, board)) {
           board.getPlayer().removePiece(rook);
@@ -53,7 +53,7 @@ public class King extends Piece {
     else if (newPos.equals(queensideCastle(board))) {
       Rook rook = getQueensideRook(board);
       if (!board.getPlayer().isMoveChecked(board, this, pos, rook,
-          getQueensideRookPos()) &&
+          getQueensideRookPos(), false) &&
           rook.firstMove && this.firstMove) {
         if (super.move(newPos, board)) {
           board.getPlayer().removePiece(rook);
@@ -157,12 +157,12 @@ public class King extends Piece {
           Piece attacked = board.getPieceAt(m, getColor().getOppositeColor());
           if (qc != null && m.equals(qc)) {
             attacked = getKingsideRook(board);
-            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, getKingsideRookPos());
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, getKingsideRookPos(), false);
           } else if (kc != null && m.equals(kc)) {
             attacked = getQueensideRook(board);
-            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, getQueensideRookPos());
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, getQueensideRookPos(), false);
           } else {
-            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null);
+            return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null, false);
           }
         })
         .collect(Collectors.toList());

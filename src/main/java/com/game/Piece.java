@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 /**
  * A sakkfigurákat reprezentáló absztrakt osztály.
  */
-public abstract class Piece {
+public abstract class Piece implements Cloneable {
   Color color;
   Vec2 pos;
   ImageIcon image;
@@ -94,7 +94,7 @@ public abstract class Piece {
     return getMoves(board).stream()
         .filter(m -> {
           Piece attacked = board.getPlayer(color).getPieceAt(m, getColor().getOppositeColor());
-          return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null);
+          return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null, false);
         })
         .collect(Collectors.toList());
   }
@@ -131,12 +131,14 @@ public abstract class Piece {
 
     pgnMove.append(newPos.toAlgebraic());
 
-    if (board.getNextPlayer().isMoveChecked(board, this, newPos, attacked, null)) {
+    if (board.getNextPlayer().isMoveChecked(board, this, newPos, attacked, null, true)) {
+      pgnMove.append('#');
+    }
+
+    else if (board.getNextPlayer().isMoveChecked(board, this, newPos, attacked, null, false)) {
       pgnMove.append('+');
     }
 
-    else if (board.getNextPlayer().isCheckMate(board))
-      pgnMove.append('#');
     return pgnMove.toString();
   }
 
@@ -200,7 +202,7 @@ public abstract class Piece {
     Piece attacked = board.getPieceAt(newPos, getOppositeColor());
     if (getMoves(board).contains(newPos) &&
         !board.getPlayer().isMoveChecked(board, this, newPos, attacked,
-            null)) {
+            null, false)) {
       updateLastMove(newPos, attacked, board);
       this.pos = newPos;
       return true;

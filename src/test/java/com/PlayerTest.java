@@ -98,7 +98,7 @@ public class PlayerTest {
     public void testIsChecked() {
         board.player1.setUpPieces(8);
         board.player2.setUpPieces(8);
-        boolean isChecked = board.player1.isChecked(board, 0);
+        boolean isChecked = board.player1.isChecked(board);
         assertFalse(isChecked);
     }
 
@@ -108,7 +108,7 @@ public class PlayerTest {
         board.player2.setUpPieces(8);
         Piece primary = board.player1.getPiece(Type.KING);
         Vec2 pPos = new Vec2(4, 5);
-        boolean isMoveChecked = board.player1.isMoveChecked(board, primary, pPos, null, null);
+        boolean isMoveChecked = board.player1.isMoveChecked(board, primary, pPos, null, null, false);
         assertFalse(isMoveChecked);
     }
 
