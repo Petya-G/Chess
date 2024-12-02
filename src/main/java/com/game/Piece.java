@@ -93,7 +93,7 @@ public abstract class Piece {
   public List<Vec2> getMovesNotChecked(Board board) {
     return getMoves(board).stream()
         .filter(m -> {
-          Piece attacked = board.getPieceAt(m, getColor().getOppositeColor());
+          Piece attacked = board.getPlayer(color).getPieceAt(m, getColor().getOppositeColor());
           return !board.getPlayer(color).isMoveChecked(board, this, m, attacked, null);
         })
         .collect(Collectors.toList());

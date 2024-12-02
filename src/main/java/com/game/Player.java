@@ -213,24 +213,16 @@ public class Player {
   }
 
   /**
-   * Visszadja a játékos összes lehetséges lépését.
+   * Visszadja a játékos összes lehetséges lépését, amik nem vezetnek sakkhoz.
    * 
    * @param board a játéktábla
-   * @return a játékos összes lehetséges lépése
+   * @return a játékos lépései amik nem vezetnek sakkhoz
    */
-  private List<Vec2> getMoves(Board board) {
-    List<Vec2> moves = new ArrayList<>();
-
-    for (Piece p : getPieces()) {
-      for (Vec2 m : p.getMoves(board)) {
-        Piece attacked = board.getPieceAt(m, color.getOppositeColor());
-        if (!isMoveChecked(board, p, m, attacked, null)) {
-          moves.add(m);
-        }
-      }
-    }
-
-    return moves;
+  private List<Vec2> getMovesNotChecked(Board board) {
+      List<Piece> ps = new ArrayList<>(pieces);
+      return ps.stream()
+               .flatMap(p -> p.getMovesNotChecked(board).stream())
+               .collect(Collectors.toList());
   }
 
   /**
@@ -240,7 +232,7 @@ public class Player {
    * @return igaz, ha a játékos sakkmattot kapott, egyébként hamis
    */
   public boolean isCheckMate(Board board) {
-    return getMoves(board).size() == 0 && isChecked(board, board.turn);
+    return getMovesNotChecked(board).size() == 0 && isChecked(board, board.turn);
   }
 
   /**
