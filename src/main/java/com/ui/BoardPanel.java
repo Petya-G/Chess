@@ -79,7 +79,7 @@ public class BoardPanel extends JPanel {
      * @param j A sor indexe.
      */
     public void setTile(int i, int j) {
-      setBackground((i + j) % 2 == 0 ? window.tileYellow : Window.tileGreen);
+      setBackground((i + j) % 2 == 0 ? Window.tileYellow : Window.tileGreen);
 
       if (j == 0) {
         rowLabel.setText(Integer.toString(8 - i));

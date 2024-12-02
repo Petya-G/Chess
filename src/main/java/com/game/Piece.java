@@ -117,10 +117,6 @@ public abstract class Piece implements Cloneable {
       pgnMove.append('x');
     }
 
-    if (this.getType() == Type.KNIGHT) {
-      int b = 0;
-    }
-
     if (hasSameMoveOnColumn(newPos, board) && hasSameMoveOnRow(newPos, board)) {
       pgnMove.append(this.toString());
     }

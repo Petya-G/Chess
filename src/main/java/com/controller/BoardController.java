@@ -98,7 +98,7 @@ public class BoardController {
    * @param pawn A promotálni kívánt bábú.
    */
   public void promotion(Pawn pawn) {
-    Type type = boardPanel.promptForPromotion();
+    Type type = BoardPanel.promptForPromotion();
     pawn.promoteTo(type, board);
   }
 

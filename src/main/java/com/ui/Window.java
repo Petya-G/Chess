@@ -73,6 +73,7 @@ public class Window extends JFrame {
   /** 
    * @param args
    */
+  @SuppressWarnings("unused")
   public static void main(String[] args) {
     Window window = new Window();
   }
