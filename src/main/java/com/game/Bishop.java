@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 /**
  * A futót reprezentáló osztály.
  */
-public class Bishop extends Piece implements Cloneable {
+public class Bishop extends Piece {
 	/**
 	 * A Bishop osztály konstruktora.
 	 *

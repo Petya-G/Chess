@@ -361,10 +361,13 @@ public abstract class Piece implements Cloneable {
         break;
       }
 
-      if (!board.hasPieceAt(move, color)) {
-        moves.add(move);
-      } else {
+      if (board.hasPieceAt(move)) {
+        if (!board.hasPieceAt(move, color)) {
+          moves.add(move);
+        }
         break;
+      } else {
+        moves.add(move);
       }
     }
     return moves;
