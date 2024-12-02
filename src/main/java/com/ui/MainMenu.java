@@ -2,9 +2,13 @@ package main.java.com.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -17,6 +21,15 @@ import javax.swing.JTextField;
  */
 public class MainMenu extends JPanel {
   private String[] playerNames;
+  private BufferedImage backgroundImage;
+
+  @Override
+  protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    if (backgroundImage != null) {
+      g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+    }
+  }
 
   /**
    * A menü gombot reprezentáló osztály.
@@ -24,7 +37,7 @@ public class MainMenu extends JPanel {
   public class MenuButton extends JButton {
     public MenuButton(String name, Window window) {
       super(name);
-      this.setPreferredSize(new Dimension(150, 50));
+      this.setPreferredSize(new Dimension(50, 25));
       this.setFocusable(false);
       this.setBackground(new Color(0x81B64C));
       this.setForeground(Color.white);
@@ -37,8 +50,14 @@ public class MainMenu extends JPanel {
    * @param window A főablak
    */
   public MainMenu(Window window) {
-    GridLayout gridLayout = new GridLayout(4, 4, 10, 10);
+    GridLayout gridLayout = new GridLayout(10, 10, 10, 10);
     setLayout(gridLayout);
+
+    try {
+      backgroundImage = ImageIO.read(new File("src/main/java/com/images/chess.png"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     JButton startButton = new MenuButton("Start New Game", window);
     startButton.addActionListener(e -> {
