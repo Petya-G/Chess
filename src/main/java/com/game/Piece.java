@@ -117,6 +117,10 @@ public abstract class Piece implements Cloneable {
       pgnMove.append('x');
     }
 
+    if (this.getType() == Type.KNIGHT) {
+      int b = 0;
+    }
+
     if (hasSameMoveOnColumn(newPos, board) && hasSameMoveOnRow(newPos, board)) {
       pgnMove.append(this.toString());
     }
@@ -152,7 +156,7 @@ public abstract class Piece implements Cloneable {
   private boolean hasSameMoveOnRow(Vec2 newPos, Board board) {
     for (Piece p : board.getPlayer().getPieces()) {
       for (Vec2 m : p.getMoves(board)) {
-        if (!p.equals(this) && this.getType() != p.getType() && p.pos.y == this.pos.y && newPos.equals(m))
+        if (!p.equals(this) && this.getType() == p.getType() && p.pos.y == this.pos.y && newPos.equals(m))
           return true;
       }
     }
@@ -170,7 +174,7 @@ public abstract class Piece implements Cloneable {
   private boolean hasSameMoveOnColumn(Vec2 newPos, Board board) {
     for (Piece p : board.getPlayer().getPieces()) {
       for (Vec2 m : p.getMoves(board)) {
-        if (!p.equals(this) && this.getType() != p.getType() && p.pos.x == this.pos.x && newPos.equals(m))
+        if (!p.equals(this) && this.getType() == p.getType() && p.pos.x == this.pos.x && newPos.equals(m))
           return true;
       }
     }

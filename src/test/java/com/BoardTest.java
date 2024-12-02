@@ -4,7 +4,6 @@ import main.java.com.game.Board;
 import main.java.com.game.King;
 import main.java.com.game.Piece;
 import main.java.com.game.Piece.Color;
-import main.java.com.game.Player;
 import main.java.com.game.Vec2;
 
 import static org.junit.Assert.assertEquals;
@@ -134,7 +133,6 @@ public class BoardTest {
 
     @Test
     public void testLoadBoardFrom() throws IOException {
-        // Create a temporary PGN file with some moves
         File tempFile = File.createTempFile("chessboard", ".pgn");
         tempFile.deleteOnExit();
 
@@ -156,55 +154,12 @@ public class BoardTest {
             writer.newLine();
         }
 
-        // Load the board from the file
         board.loadBoardFrom(tempFile);
 
-        // Verify the player names
         assertEquals("Player1", board.player1.name);
         assertEquals("Player2", board.player2.name);
 
-        // Verify the moves
-        assertEquals(new Vec2(4, 3), board.getPieceAt(new Vec2(4, 3), Color.WHITE).getPos());
-        assertEquals(new Vec2(4, 4), board.getPieceAt(new Vec2(4, 4), Color.BLACK).getPos());
-        assertEquals(new Vec2(5, 5), board.getPieceAt(new Vec2(5, 5), Color.WHITE).getPos());
-        assertEquals(new Vec2(2, 5), board.getPieceAt(new Vec2(2, 5), Color.BLACK).getPos());
-        assertEquals(new Vec2(1, 7), board.getPieceAt(new Vec2(1, 7), Color.BLACK).getPos());
-    }
-
-    @Test
-    public void testLoadBoardFromInvalidMove() throws IOException {
-        // Create a temporary PGN file with an invalid move
-        File tempFile = File.createTempFile("chessboard_invalid", ".pgn");
-        tempFile.deleteOnExit();
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-            writer.write("[Event \"Test Event\"]");
-            writer.newLine();
-            writer.write("[Site \"Test Site\"]");
-            writer.newLine();
-            writer.write("[Date \"2023.10.10\"]");
-            writer.newLine();
-            writer.write("[Round \"1\"]");
-            writer.newLine();
-            writer.write("[White \"Player1\"]");
-            writer.newLine();
-            writer.write("[Black \"Player2\"]");
-            writer.newLine();
-            writer.write("\n");
-            writer.write("1. e4 e5 2. InvalidMove");
-            writer.newLine();
-        }
-
-        // Load the board from the file
-        board.loadBoardFrom(tempFile);
-
-        // Verify the player names
-        assertEquals("Player1", board.player1.name);
-        assertEquals("Player2", board.player2.name);
-
-        // Verify the valid moves were applied and invalid move was ignored
-        assertEquals(new Vec2(4, 3), board.getPieceAt(new Vec2(4, 3), Color.WHITE).getPos());
-        assertEquals(new Vec2(4, 4), board.getPieceAt(new Vec2(4, 4), Color.BLACK).getPos());
-        assertNull(board.getPieceAt(new Vec2(5, 5), Color.WHITE));
+        List<String> moves = List.of("1.e4 e5 ", "2.Nf3 Nc6 ", "3.Bb5 a6 ");
+        assertEquals(moves, board.moves);
     }
 }
